@@ -7,5 +7,6 @@
 	<classpathentry kind="lib" path="/home/ks6g10/git/jymplayer/dep/httpcomponents-client-4.0.3/lib/httpcore-4.0.1.jar"/>
 	<classpathentry kind="lib" path="/home/ks6g10/git/jymplayer/dep/javamail-1.4.4/mail.jar"/>
 	<classpathentry kind="lib" path="/home/ks6g10/git/jymplayer/dep/gdata/java/lib/gdata-youtube-2.0.jar"/>
+	<classpathentry kind="lib" path="/home/ks6g10/git/jymplayer/dep/gdata/java/deps/google-collect-1.0-rc1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
