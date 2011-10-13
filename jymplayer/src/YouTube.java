@@ -43,7 +43,7 @@ public class YouTube {
 	static final String SUBSCRIPTIONS = "/subscriptions";
 	static final String UPLOADS = "/uploads";
 	static final String NEWSUBSCIPTIONS ="/newsubscriptionvideos";
-	static final String FIRSTINDEX = "start-index=";
+	static final String FIRSTINDEX = "&start-index=";
 	static boolean isSmall = true;
 	static int xspace = 5, yspace = 5;
 	static JFrame myFrame = new JFrame();
@@ -53,9 +53,10 @@ public class YouTube {
 
 	
 	public static List<VideoEntry> getNextVideos(String argFeed, int argNItems, int argStartIndex){
-		nItems = Integer.toString(argNItems);
-		String index = Integer.toString(argStartIndex);
+		nItems = Integer.toString(argNItems+1);//plus 1 for index correction
+		String index = Integer.toString(argStartIndex+1);//plus one for index correction
 		String feedUrl =  BASEURL.concat(username).concat(argFeed).concat(MAXRESULT).concat(nItems).concat(FIRSTINDEX).concat(index);
+		System.out.println(feedUrl);
 		VideoFeed feed = null;
 		try {
 			feed = myService.getFeed(new URL(feedUrl), VideoFeed.class);
@@ -220,24 +221,18 @@ public class YouTube {
 			JMenuBar menuBar = new JMenuBar();
 			menuBar.setBackground(Color.white);
 			menuBar.setVisible(true);
-			NewSubVideoPanel asd = new NewSubVideoPanel();
-			myFrame.add(asd);
+			menuBar.setPreferredSize(new Dimension(1024, 20));
+			NewSubVideoPanel newSubPanel = new NewSubVideoPanel();
+			myFrame.add(newSubPanel);
 			myFrame.setSize(1024, 600);
 			myFrame.setJMenuBar(menuBar);
-			menuBar.setPreferredSize(new Dimension(1024, 20));
 			myFrame.addWindowListener(new WindowClose());
-			asd.setBackground(globalFade);
-			myFrame.setVisible(true);
-			asd.setVisible(true);
 			myFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			//myFrame.validate();
-			//int tmpSizes[] = calcMaxThumbs();
-			//myPanel.setLayout(new FlowLayout(FlowLayout.CENTER, tmpSizes[1], tmpSizes[2]));
-			//latestSubVideosView(tmpSizes[0],true);
-			//myPanel.validate();
-			asd.validate();
-			asd.init();
-			thumbs = asd.getComponents();
+			myFrame.setVisible(true);
+			newSubPanel.setBackground(globalFade);
+			newSubPanel.setVisible(true);
+			newSubPanel.validate();
+			newSubPanel.init();
 		}
 		catch(AuthenticationException e) {
 			e.printStackTrace();
