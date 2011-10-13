@@ -31,6 +31,9 @@ public abstract class GeneralVideoPanel extends JPanel {
 			thumbs.add(tmp);
 		}
 	}
+	
+
+	
 	public void addVideoThumbs(List<VideoEntry> argEntries) {
 		VideoThumb tmp;
 		for(int i=0; i<argEntries.size(); i++) {

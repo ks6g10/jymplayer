@@ -22,6 +22,7 @@ public class EmptyVideoSlot extends JLabel {
 		this.addMouseListener(new SlotMouseHandler());
 	}
 	
+	
 	public void setHover() {
 		this.setIcon(hover);
 	}
