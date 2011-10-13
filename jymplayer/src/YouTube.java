@@ -37,12 +37,13 @@ public class YouTube {
 	static VideoStreamFetcher vSF = new VideoStreamFetcher();
 	static String nItems = "2";
 	static String username = "p0jk3n";
-	static final String RESULTSUFFIX = "?max-results=";
+	static final String MAXRESULT = "?max-results=";
 	static final String BASEURL = "http://gdata.youtube.com/feeds/api/users/";
 	static final String FAVORITES = "/favorites";
 	static final String SUBSCRIPTIONS = "/subscriptions";
 	static final String UPLOADS = "/uploads";
 	static final String NEWSUBSCIPTIONS ="/newsubscriptionvideos";
+	static final String FIRSTINDEX = "start-index=";
 	static boolean isSmall = true;
 	static int xspace = 5, yspace = 5;
 	static JFrame myFrame = new JFrame();
@@ -50,6 +51,28 @@ public class YouTube {
 	static Component[] thumbs;
 	static Color globalFade = Color.black;
 
+	
+	public static List<VideoEntry> getNextVideos(String argFeed, int argNItems, int argStartIndex){
+		nItems = Integer.toString(argNItems);
+		String index = Integer.toString(argStartIndex);
+		String feedUrl =  BASEURL.concat(username).concat(argFeed).concat(MAXRESULT).concat(nItems).concat(FIRSTINDEX).concat(index);
+		VideoFeed feed = null;
+		try {
+			feed = myService.getFeed(new URL(feedUrl), VideoFeed.class);
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ServiceException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return feed.getEntries();
+	}
+	
+	
 	public static void showAuthorVideos(String argAuthor) {
 		
 		for(int i=0;i< thumbs.length;i++) {
@@ -111,7 +134,7 @@ public class YouTube {
 	}
 
 	public static List<VideoEntry> getLatestSubVideos() throws MalformedURLException, IOException, ServiceException {
-		String feedUrl =  BASEURL.concat(username).concat(NEWSUBSCIPTIONS).concat(RESULTSUFFIX).concat(nItems);
+		String feedUrl =  BASEURL.concat(username).concat(NEWSUBSCIPTIONS).concat(MAXRESULT).concat(nItems);
 		VideoFeed feed = myService.getFeed(new URL(feedUrl), VideoFeed.class);
 		return feed.getEntries();
 	}
@@ -157,7 +180,7 @@ public class YouTube {
 
 	public static void favouriteVideosView(int argItems) throws IOException, ServiceException {
 		nItems = Integer.toString(argItems);
-		URL metafeedUrl = new URL(BASEURL.concat(username).concat(FAVORITES).concat(RESULTSUFFIX).concat(nItems));
+		URL metafeedUrl = new URL(BASEURL.concat(username).concat(FAVORITES).concat(MAXRESULT).concat(nItems));
 		System.out.println("Getting favorite video entries...\n");
 		VideoFeed resultFeed = myService.getFeed(metafeedUrl, VideoFeed.class);
 		List<VideoEntry> entries = resultFeed.getEntries();

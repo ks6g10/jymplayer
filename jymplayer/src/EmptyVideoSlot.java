@@ -8,8 +8,10 @@ import javax.swing.JLabel;
 public class EmptyVideoSlot extends JLabel {
 	private final ImageIcon normal,hover,click;
 	//private final JLabel	lNormal,lHover,lClick;
+	private final int index;
 	
-	public EmptyVideoSlot() {
+	public EmptyVideoSlot(int argIndex) {
+		index = argIndex;
 		normal = new ImageIcon(getClass().getResource("icons/addnormal.png"));
 		hover = new ImageIcon(getClass().getResource("icons/addhover.png"));
 		click = new ImageIcon(getClass().getResource("icons/addclick.png"));
@@ -29,13 +31,17 @@ public class EmptyVideoSlot extends JLabel {
 	public void setClick() {
 		this.setIcon(click);
 	}
+	public void clicked() {
+		setHover();
+		((GeneralVideoPanel) this.getParent()).fetchReminingVideos(index);
+	}
 }
 
 class SlotMouseHandler implements MouseListener {
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		((EmptyVideoSlot) e.getSource()).setHover();
+		((EmptyVideoSlot) e.getSource()).clicked();
 		e.consume();
 	}
 

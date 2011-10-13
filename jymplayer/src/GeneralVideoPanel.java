@@ -10,14 +10,17 @@ public abstract class GeneralVideoPanel extends JPanel {
 
 	ArrayList<VideoThumb> thumbs = new ArrayList<VideoThumb>(25);
 	private int xrow;
+	protected int thumbCount =0;
+	protected ArrayList<EmptyVideoSlot> emptyVideos = new ArrayList<EmptyVideoSlot>(10);
 	public GeneralVideoPanel() {
 		this.setVisible(true);
 	}
 	
-	public abstract void fetchReminingVideos();
+	public abstract void fetchReminingVideos(int argEmptyIndex);
 
 	public void addVideoThumbsProg(List<VideoEntry> argEntries) {
 		VideoThumb tmp;
+		thumbCount += argEntries.size();
 		for(int i=0; i<argEntries.size(); i++) {
 			tmp = new VideoThumb(argEntries.get(i));
 			tmp.setVisible(false);

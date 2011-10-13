@@ -1,13 +1,8 @@
 import java.awt.FlowLayout;
+import java.util.List;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URL;
-
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-
-
-
+import com.google.gdata.data.youtube.VideoEntry;
 import com.google.gdata.util.ServiceException;
 
 
@@ -25,8 +20,9 @@ public class NewSubVideoPanel extends GeneralVideoPanel {
 		latestSubVideosView(size[0]-1, false);
 		//new ImageIcon("icons\\addnormal.png")
 		
-		
-		this.add(new EmptyVideoSlot());
+		EmptyVideoSlot tmp = new EmptyVideoSlot(1);
+		this.add(tmp);
+		super.emptyVideos.add(tmp);
 		this.validate();
 	}
 	
@@ -40,8 +36,13 @@ public class NewSubVideoPanel extends GeneralVideoPanel {
 	}
 
 	@Override
-	public void fetchReminingVideos() {
-		// TODO Auto-generated method stub
+	public void fetchReminingVideos(int argEmptyIndex) {
+			List<VideoEntry> asd = YouTube.getNextVideos(YouTube.NEWSUBSCIPTIONS, argEmptyIndex, super.thumbCount);
+			for(int i = 1; i <= argEmptyIndex; i++) {
+				this.remove(super.emptyVideos.get(i));
+			}
+		
+			super.addVideoThumbs(asd);
 		
 	}
 	
