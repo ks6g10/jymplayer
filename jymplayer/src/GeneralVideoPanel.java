@@ -6,13 +6,15 @@ import javax.swing.JPanel;
 import com.google.gdata.data.youtube.VideoEntry;
 
 
-public class GeneralVideoPanel extends JPanel {
+public abstract class GeneralVideoPanel extends JPanel {
 
 	ArrayList<VideoThumb> thumbs = new ArrayList<VideoThumb>(25);
 	private int xrow;
 	public GeneralVideoPanel() {
 		this.setVisible(true);
 	}
+	
+	public abstract void fetchReminingVideos();
 
 	public void addVideoThumbsProg(List<VideoEntry> argEntries) {
 		VideoThumb tmp;

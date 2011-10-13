@@ -27,6 +27,7 @@ public class NewSubVideoPanel extends GeneralVideoPanel {
 		
 		
 		this.add(new EmptyVideoSlot());
+		this.validate();
 	}
 	
 	public void latestSubVideosView(int argItems, boolean isProgressive) throws MalformedURLException, IOException, ServiceException {
@@ -36,6 +37,12 @@ public class NewSubVideoPanel extends GeneralVideoPanel {
 		} else {
 			super.addVideoThumbs(YouTube.getLatestSubVideos());
 		}
+	}
+
+	@Override
+	public void fetchReminingVideos() {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	
