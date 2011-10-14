@@ -218,37 +218,37 @@ public class YouTube {
 	
 	public static void main(String[] args) {
 
-//		try {
+		try {
 			//newSubPanel = new NewSubVideoPanel();
 			//myFrame.add(newSubPanel);
-			//UpploaderView u = new UpploaderView();
-			//u.init(username);
 			isSmall = true;
 			JMenuBar menuBar = new JMenuBar();
 			menuBar.setBackground(Color.white);
 			menuBar.setVisible(true);
 			menuBar.setPreferredSize(new Dimension(1024, 20));
-			myFrame.add(new ChannelThumb());
-			myFrame.setLayout(new FlowLayout());
+			UpploaderView u = new UpploaderView();
+			myFrame.add(u);
+		//	myFrame.setLayout(new FlowLayout());
 			myFrame.setSize(1024, 600);
 			myFrame.setJMenuBar(menuBar);
 			myFrame.addWindowListener(new WindowClose());
 			myFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			myFrame.setVisible(true);
+			u.init(username);
 			//initNewSubPanel();
-//		}
-//		catch(AuthenticationException e) {
-//			e.printStackTrace();
-//		}
-//		catch(MalformedURLException e) {
-//			e.printStackTrace();
-//		}
-//		catch(ServiceException e) {
-//			e.printStackTrace();
-//		}
-//		catch(IOException e) {
-//			e.printStackTrace();
-//		}
+		}
+		catch(AuthenticationException e) {
+			e.printStackTrace();
+		}
+		catch(MalformedURLException e) {
+			e.printStackTrace();
+		}
+		catch(ServiceException e) {
+			e.printStackTrace();
+		}
+		catch(IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

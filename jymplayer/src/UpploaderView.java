@@ -1,3 +1,4 @@
+import java.awt.FlowLayout;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -20,7 +21,7 @@ public class UpploaderView extends JPanel {
 		ArrayList<UserProfileEntry> tmpUserProfiles = new ArrayList<UserProfileEntry>(argUsernames.size());
 		for(String user: argUsernames) {
 			UserProfileEntry entry = YouTube.myService.getEntry(new URL( feedUrl.concat(user)), UserProfileEntry.class);//getFeed(new URL(feedUrl.concat(user)), UserProfileFeed.class);
-			System.out.println(entry.getThumbnail().getUrl());
+			this.add(new ChannelThumb(entry));
 		}
 		
 	}
@@ -37,6 +38,9 @@ public class UpploaderView extends JPanel {
 	
 	public void init(String argUser) throws MalformedURLException, IOException, ServiceException {
 		getUserProfiles(getSubsUsers(argUser));
+		this.setLayout(new FlowLayout());
+		this.setVisible(true);
+		this.validate();
 	}
 	
 }
