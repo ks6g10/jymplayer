@@ -14,8 +14,10 @@ import com.google.gdata.util.ServiceException;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.LayoutManager;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.IOException;
@@ -216,7 +218,7 @@ public class YouTube {
 	
 	public static void main(String[] args) {
 
-		try {
+//		try {
 			//newSubPanel = new NewSubVideoPanel();
 			//myFrame.add(newSubPanel);
 			//UpploaderView u = new UpploaderView();
@@ -226,26 +228,27 @@ public class YouTube {
 			menuBar.setBackground(Color.white);
 			menuBar.setVisible(true);
 			menuBar.setPreferredSize(new Dimension(1024, 20));
+			myFrame.add(new ChannelThumb());
+			myFrame.setLayout(new FlowLayout());
 			myFrame.setSize(1024, 600);
 			myFrame.setJMenuBar(menuBar);
 			myFrame.addWindowListener(new WindowClose());
 			myFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			myFrame.setVisible(true);
 			//initNewSubPanel();
-			
-		}
-		catch(AuthenticationException e) {
-			e.printStackTrace();
-		}
-		catch(MalformedURLException e) {
-			e.printStackTrace();
-		}
-		catch(ServiceException e) {
-			e.printStackTrace();
-		}
-		catch(IOException e) {
-			e.printStackTrace();
-		}
+//		}
+//		catch(AuthenticationException e) {
+//			e.printStackTrace();
+//		}
+//		catch(MalformedURLException e) {
+//			e.printStackTrace();
+//		}
+//		catch(ServiceException e) {
+//			e.printStackTrace();
+//		}
+//		catch(IOException e) {
+//			e.printStackTrace();
+//		}
 	}
 
 }
