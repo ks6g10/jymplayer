@@ -19,8 +19,8 @@ public class UpploaderView extends JPanel {
 		String feedUrl = YouTube.BASEURL;
 		ArrayList<UserProfileEntry> tmpUserProfiles = new ArrayList<UserProfileEntry>(argUsernames.size());
 		for(String user: argUsernames) {
-			UserProfileEntry feed = YouTube.myService.getEntry(new URL( feedUrl.concat(user)), UserProfileEntry.class);//getFeed(new URL(feedUrl.concat(user)), UserProfileFeed.class);
-			System.out.println(feed.getThumbnail().getUrl());
+			UserProfileEntry entry = YouTube.myService.getEntry(new URL( feedUrl.concat(user)), UserProfileEntry.class);//getFeed(new URL(feedUrl.concat(user)), UserProfileFeed.class);
+			System.out.println(entry.getThumbnail().getUrl());
 		}
 		
 	}
