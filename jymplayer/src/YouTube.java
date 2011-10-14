@@ -50,7 +50,7 @@ public class YouTube {
 	static JPanel myPanel = new JPanel();
 	static Component[] thumbs;
 	static Color globalFade = Color.black;
-
+	static NewSubVideoPanel newSubPanel;
 	
 	public static List<VideoEntry> getNextVideos(String argFeed, int argNItems, int argStartIndex){
 		nItems = Integer.toString(argNItems+1);//plus 1 for index correction
@@ -123,19 +123,11 @@ public class YouTube {
 		return null;
 	}
 
-	public static ArrayList<String> getSubsUsers(String argUser) throws MalformedURLException, IOException, ServiceException {
-		ArrayList<String> subs = new ArrayList<String>();//subscription usernames
-		String feedUrl =  BASEURL.concat(argUser).concat(SUBSCRIPTIONS);    
-		SubscriptionFeed feed = myService.getFeed(new URL(feedUrl), SubscriptionFeed.class);
-		for(SubscriptionEntry entry : feed.getEntries()) {
-			subs.add(entry.getUsername());	
-		}
-		return subs;
 
-	}
 
 	public static List<VideoEntry> getLatestSubVideos() throws MalformedURLException, IOException, ServiceException {
 		String feedUrl =  BASEURL.concat(username).concat(NEWSUBSCIPTIONS).concat(MAXRESULT).concat(nItems);
+		System.out.println(feedUrl);
 		VideoFeed feed = myService.getFeed(new URL(feedUrl), VideoFeed.class);
 		return feed.getEntries();
 	}
@@ -214,25 +206,33 @@ public class YouTube {
 		myFrame.dispose();
 	}
 	
+	public static void initNewSubPanel() throws MalformedURLException, IOException, ServiceException {
+		
+		newSubPanel.setBackground(globalFade);
+		newSubPanel.setVisible(true);
+		newSubPanel.validate();
+		newSubPanel.init();
+	}
+	
 	public static void main(String[] args) {
 
 		try {
+			//newSubPanel = new NewSubVideoPanel();
+			//myFrame.add(newSubPanel);
+			//UpploaderView u = new UpploaderView();
+			//u.init(username);
 			isSmall = true;
 			JMenuBar menuBar = new JMenuBar();
 			menuBar.setBackground(Color.white);
 			menuBar.setVisible(true);
 			menuBar.setPreferredSize(new Dimension(1024, 20));
-			NewSubVideoPanel newSubPanel = new NewSubVideoPanel();
-			myFrame.add(newSubPanel);
 			myFrame.setSize(1024, 600);
 			myFrame.setJMenuBar(menuBar);
 			myFrame.addWindowListener(new WindowClose());
 			myFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			myFrame.setVisible(true);
-			newSubPanel.setBackground(globalFade);
-			newSubPanel.setVisible(true);
-			newSubPanel.validate();
-			newSubPanel.init();
+			//initNewSubPanel();
+			
 		}
 		catch(AuthenticationException e) {
 			e.printStackTrace();
