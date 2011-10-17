@@ -24,7 +24,6 @@ public class VideoThumb extends JPanel implements Comparable<VideoThumb> {
 	/**
 	 * @param args
 	 */
-	private int count;
 	private  String title;
 	private  String description;
 	private  String author;
@@ -32,7 +31,6 @@ public class VideoThumb extends JPanel implements Comparable<VideoThumb> {
 	private  DateTime date;
 	private  VideoEntry entry;
 	private  YouTubeMediaGroup mediaGroup;
-	private URL urlImage;
 	private JLabel imageLabel,titleLabel,authLabel,lengthLabel,dateLabel;
 	private JTextArea descArea;
 	private JTextArea smallTitle;
@@ -45,7 +43,6 @@ public class VideoThumb extends JPanel implements Comparable<VideoThumb> {
 	private Color titleColor;
 	private final int colorBreak = 125; //when to change the color of title
 	private Border border;
-	private VideoThumb thisThumb = null;
 	
 
 	public static Color getColor(String argUser) {
@@ -59,9 +56,7 @@ public class VideoThumb extends JPanel implements Comparable<VideoThumb> {
 		int g = h %255;
 		h >>=8;
 		int b = h %255;
-		colormap.put(argUser,new Color(r,g,b));
-
-		return colormap.get(argUser);
+		return colormap.put(argUser,new Color(r,g,b));
 	}
 	
 // Compare-------------------------------------------------------------
@@ -82,7 +77,6 @@ public class VideoThumb extends JPanel implements Comparable<VideoThumb> {
 		return ((VideoThumb)argObj).getDate().compareTo(date);
 	}
 // Compare-------------------------------------------------------------
-
 	private String durationToString(long argTime) {
 		String returnString = (argTime/60)+":";
 		if(argTime%60 < 10)
@@ -90,7 +84,6 @@ public class VideoThumb extends JPanel implements Comparable<VideoThumb> {
 		returnString += argTime%60;
 		return returnString;
 	}
-
 	public Color getProgFrameColor() {
 		if(YouTube.globalFade.equals(Color.black))
 			return Color.white;
@@ -98,15 +91,10 @@ public class VideoThumb extends JPanel implements Comparable<VideoThumb> {
 	}
 	
 	
-	public static VideoThumb getProgThumb() {
-		VideoThumb tmp = new VideoThumb();
-		tmp.putSelf(tmp);
-		return tmp;
-	}
+
 	
-	private VideoThumb() {
+	public VideoThumb() {
 		 videoURL = "";
-		 //this.setBorder(BorderFactory.createLineBorder(getProgFrameColor()));
 		 this.setPreferredSize(small);
 		 this.setBackground(YouTube.globalFade);
 		 this.add(new EmptyVideoSlot(0));
@@ -116,11 +104,10 @@ public class VideoThumb extends JPanel implements Comparable<VideoThumb> {
 	public void replace(VideoEntry argVideo) {
 		this.removeAll();
 		this.init(argVideo);
-		this.setVisible(true);
 	}
 	
-	public void putSelf(VideoThumb argSelf) {
-		thisThumb = argSelf;
+	public VideoThumb(VideoEntry argVideo) {
+		init(argVideo);
 	}
 	
 	private void init(VideoEntry argVideo) {
@@ -143,39 +130,10 @@ public class VideoThumb extends JPanel implements Comparable<VideoThumb> {
 		this.setBackground(bkgColor);
 		border = BorderFactory.createLineBorder(bkgColor);
 		this.setBorder(border);
-		//this.setBorder(BorderFactory.createBevelBorder(0));
 		this.validate();
 		this.setVisible(true);
 	}
-
-	public VideoThumb(VideoEntry argVideo) {
-		init(argVideo);
-	}
-
-
-	private void initLayouts() {
-		if(YouTube.isSmall) {
-			initSpringSmall();
-		} else {
-			initSpringMedium();
-		}
-	}
-
-	private void adjustTitleColor(Color argColor) {
-		titleColor = Color.black;
-		int r = argColor.getRed();
-		int g = argColor.getGreen();
-		int b = argColor.getBlue();
-		int colorBrightness = (((r*299) + (g*587) + (b*114)) / 1000);
-		if(colorBrightness < colorBreak) {
-			titleColor = Color.white;
-			titleLabel.setForeground(titleColor);
-			titleLabel.validate();
-			smallTitle.setForeground(titleColor);
-			smallTitle.validate();
-		}
-	}
-
+	
 	private void createJObjects() throws MalformedURLException {
 		//title area
 		titleLabel = new JLabel(title);
@@ -190,17 +148,17 @@ public class VideoThumb extends JPanel implements Comparable<VideoThumb> {
 		smallTitle.setWrapStyleWord(false);
 		smallTitle.setFont(getFont().deriveFont((float) 10));
 		smallTitle.setRows(2);
-
 		//author,date length and description area
-		urlImage = new URL(mediaGroup.getThumbnails().get(0).getUrl());
-		imageLabel = new JLabel(new ImageIcon(urlImage));
+//		urlImage = new URL(mediaGroup.getThumbnails().get(0).getUrl());
+//		imageLabel = new JLabel(new ImageIcon(urlImage));
+	
+		imageLabel = new JLabel(new ImageIcon(new URL(mediaGroup.getThumbnails().get(0).getUrl())));
 		authLabel = new JLabel(author);
 		authLabel.addMouseListener(new mouseOverAuthor(this));
 		dateLabel = new JLabel(date.toUiString());
 		lengthLabel = new JLabel(lenght);
 		descArea = new JTextArea(description.replaceAll("[\n\t]","" ));
 		String tmpString = "<html>"+description.replaceAll("[\n]","<br>" )+"</html>";
-		//descArea.get
 		descArea.setToolTipText(tmpString);
 		descArea.setEditable(false);  
 		descArea.setCursor(null);  
@@ -210,14 +168,20 @@ public class VideoThumb extends JPanel implements Comparable<VideoThumb> {
 		descArea.setLineWrap(true);
 	}
 
+	private void initLayouts() {
+		if(YouTube.isSmall) {
+			initSpringSmall();
+		} else {
+			initSpringMedium();
+		}
+	}
+
+
+
+
 	public void initSpringSmall() {
 		this.removeAll();
 		this.setPreferredSize(small);
-		//title =title.replaceAll("[ \t\n\f\r]","");
-		//titleLabel.setText(title);
-		//titleLabel.setFont(getFont().deriveFont((float) 7.5));
-		//this.add(titleLabel);
-
 		this.add(smallTitle);
 		this.add(lengthLabel);
 		this.add(authLabel);
@@ -225,13 +189,9 @@ public class VideoThumb extends JPanel implements Comparable<VideoThumb> {
 		Color myBck = new Color(45, 45, 45);
 		layout.putConstraint(SpringLayout.NORTH, this, -10, SpringLayout.NORTH, smallTitle);
 		layout.putConstraint(SpringLayout.WEST, this, 0, SpringLayout.WEST, smallTitle);
-		//layout.putConstraint(SpringLayout.NORTH, imageLabel, 0, SpringLayout.SOUTH, smallTitle);
 		layout.putConstraint(SpringLayout.SOUTH, imageLabel, 0, SpringLayout.SOUTH, this);
 		layout.putConstraint(SpringLayout.SOUTH, lengthLabel, 0, SpringLayout.SOUTH, imageLabel);
 		layout.putConstraint(SpringLayout.NORTH, authLabel, 0, SpringLayout.NORTH, imageLabel);
-		//layout.putConstraint(SpringLayout.EAST, authLabel, 0, SpringLayout.EAST, imageLabel);
-
-		//layout.putConstraint(SpringLayout.EAST, lengthLabel, 0, SpringLayout.EAST, this);
 		LineBorder line = new LineBorder(myBck, 1,true);
 		lengthLabel.setFont(getFont().deriveFont((float) 7.5));
 		lengthLabel.setBorder(line);
@@ -258,23 +218,19 @@ public class VideoThumb extends JPanel implements Comparable<VideoThumb> {
 		authLabel.setForeground(Color.BLUE);
 		this.add(authLabel);
 		this.add(imageLabel);
-		//this.add(viewsLabel);
 		this.add(dateLabel);
 		this.add(lengthLabel);
 		this.add(descArea);
-
 		layout.putConstraint(SpringLayout.NORTH, this, 0, SpringLayout.NORTH, titleLabel);
 		layout.putConstraint(SpringLayout.WEST, this, 0, SpringLayout.WEST, titleLabel);
 		layout.putConstraint(SpringLayout.EAST, authLabel, 0, SpringLayout.EAST, this);
 		layout.putConstraint(SpringLayout.WEST, this, 0, SpringLayout.WEST, imageLabel);
 		layout.putConstraint(SpringLayout.NORTH, this, 0, SpringLayout.NORTH, authLabel);
-		//	layout.putConstraint(SpringLayout.EAST, titleLabel,0, SpringLayout.WEST, authLabel);
 		layout.putConstraint(SpringLayout.SOUTH, imageLabel, 0, SpringLayout.SOUTH, this);
 		layout.putConstraint(SpringLayout.SOUTH, lengthLabel, 0, SpringLayout.NORTH, imageLabel);
 		layout.putConstraint(SpringLayout.WEST, descArea, 0, SpringLayout.EAST, imageLabel);
 		layout.putConstraint(SpringLayout.NORTH, descArea, 0, SpringLayout.SOUTH, titleLabel);
 		layout.putConstraint(SpringLayout.EAST, descArea, 0, SpringLayout.EAST, this);
-
 		layout.putConstraint(SpringLayout.SOUTH, dateLabel, 0, SpringLayout.SOUTH, this);
 		layout.putConstraint(SpringLayout.SOUTH, lengthLabel, 0, SpringLayout.SOUTH, this);
 		layout.putConstraint(SpringLayout.EAST, dateLabel, 0, SpringLayout.EAST, this);
@@ -285,24 +241,37 @@ public class VideoThumb extends JPanel implements Comparable<VideoThumb> {
 		descArea.setPreferredSize(new Dimension(descArea.getPreferredSize().width, tmpintY));
 		this.validate();
 	}
-
-	public void checkAuthorShow(String argAuthor) {
-		if(!author.equals(argAuthor)) {
-			this.setBackground(YouTube.globalFade);
-			smallTitle.setForeground(YouTube.globalFade);
-			this.setBorder(BorderFactory.createLineBorder(YouTube.globalFade));
-			this.setOpaque(!isOpaque());
-			imageLabel.setOpaque(!isOpaque());
-			//this.validate();
+	
+	private void adjustTitleColor(Color argColor) {
+		titleColor = Color.black;
+		int r = argColor.getRed();
+		int g = argColor.getGreen();
+		int b = argColor.getBlue();
+		int colorBrightness = (((r*299) + (g*587) + (b*114)) / 1000);
+		if(colorBrightness < colorBreak) {
+			titleColor = Color.white;
+			titleLabel.setForeground(titleColor);
+			smallTitle.setForeground(titleColor);
 		}
 	}
-	public void unshowAuthorVideos() {
-		if(!this.getBackground().equals(bkgColor)) {
-			this.setBackground(bkgColor);
-			smallTitle.setForeground(titleColor);
-			this.setBorder(border);
-			this.setOpaque(!isOpaque());
-			imageLabel.setOpaque(!isOpaque());
+	
+	public void toggleShowAuthorVideos(String argAuthor) {
+		if(argAuthor == null) {
+			if(!this.getBackground().equals(bkgColor)) {
+				this.setBackground(bkgColor);
+				smallTitle.setForeground(titleColor);
+				this.setBorder(border);
+				this.setOpaque(!isOpaque());
+				imageLabel.setOpaque(!isOpaque());
+			}
+		} else {
+			if(!author.equals(argAuthor)) {
+				this.setBackground(YouTube.globalFade);
+				smallTitle.setForeground(YouTube.globalFade);
+				this.setBorder(BorderFactory.createLineBorder(YouTube.globalFade));
+				this.setOpaque(!isOpaque());
+				imageLabel.setOpaque(!isOpaque());
+			}
 		}
 	}
 
@@ -319,6 +288,7 @@ class clickHandler implements MouseListener {
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		YouTube.playVideo(((VideoThumb)e.getSource()).getVideoURL());
+		e.consume();
 	}
 	@Override
 	public void mouseEntered(MouseEvent e){e.consume();}
@@ -339,14 +309,12 @@ class mouseOverAuthor implements MouseListener {
 	public void mouseClicked(MouseEvent e) {e.consume();}
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		
-		parentThumb.getParentPanel().showAuthorVideos(((JLabel) e.getSource()).getText());
-		//YouTube.showAuthorVideos(((JLabel) e.getSource()).getText());
+		parentThumb.getParentPanel().toggleShowAuthorVideos((((JLabel) e.getSource()).getText()));
 		e.consume();
 	}
 	@Override
 	public void mouseExited(MouseEvent e) {
-		parentThumb.getParentPanel().unshowAuthorVideos();
+		parentThumb.getParentPanel().toggleShowAuthorVideos(null);
 		e.consume();
 	}
 	@Override

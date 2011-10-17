@@ -19,17 +19,17 @@ public abstract class GeneralVideoPanel extends JPanel {
 		this.setVisible(true);
 		this.setBackground(YouTube.globalFade);
 	}
-	
+
 	public abstract void fetchReminingVideos(int argEmptyIndex);
 
-	
-	public void addProgThumbs(int argItems) {
+
+	public void addPreThumbs(int argItems) {
 		progThumbs = new ArrayList<VideoThumb>(argItems);
 		for(int i = 0;i < argItems; i++) {
-			progThumbs.add((VideoThumb) this.add(VideoThumb.getProgThumb()));
+			progThumbs.add((VideoThumb) this.add(new VideoThumb()));
 		}	
 	}
-	
+
 	public void addVideoThumbsProg1(List<VideoEntry> argEntries) {
 		VideoThumb tmp;
 		thumbCount += argEntries.size();
@@ -44,7 +44,7 @@ public abstract class GeneralVideoPanel extends JPanel {
 	public void addVideoThumbsProg(List<VideoEntry> argEntries) {
 		VideoThumb tmp;
 		thumbCount += argEntries.size();
-		
+
 		for(int i=0; i<argEntries.size(); i++) {
 			tmp = new VideoThumb(argEntries.get(i));
 			tmp.setVisible(false);
@@ -55,9 +55,9 @@ public abstract class GeneralVideoPanel extends JPanel {
 			thumbs.add(tmp);
 		}
 	}
-	
 
-	
+
+
 	public void addVideoThumbs(List<VideoEntry> argEntries) {
 		VideoThumb tmp;
 		for(int i=0; i<argEntries.size(); i++) {
@@ -69,21 +69,22 @@ public abstract class GeneralVideoPanel extends JPanel {
 		this.validate();
 	}
 
-	public void showAuthorVideos(String argAuthor) {
+	public void toggleShowAuthorVideos(String argAuthor) {
+		if(argAuthor == null) {
+			for(VideoThumb argThumb:thumbs) {
+				argThumb.toggleShowAuthorVideos(null);
+			}
+		} else {
+			for(VideoThumb argThumb:thumbs) {
+				argThumb.toggleShowAuthorVideos(argAuthor);
+			}
+		}
+	}
 
-		for(VideoThumb argThumb:thumbs) {
-			argThumb.checkAuthorShow(argAuthor);
-		}
-	}
-	public void unshowAuthorVideos() {
-		for(VideoThumb argThumb:thumbs) {
-			argThumb.unshowAuthorVideos();
-		}
-	}
 
 
 	public ArrayList<VideoThumb> getVideoThumbs(List<VideoEntry> argEntries) {
-		
+
 		ArrayList<VideoThumb> thumbArrayList = new ArrayList<VideoThumb>(Integer.parseInt(YouTube.nItems));
 		for(int i=0; i<argEntries.size(); i++) {
 			thumbArrayList.add(new VideoThumb(argEntries.get(i)));

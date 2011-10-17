@@ -54,7 +54,7 @@ public class YouTube {
 	static Component[] thumbs;
 	static Color globalFade = Color.black;
 	static NewSubVideoPanel newSubPanel;
-	
+
 	public static List<VideoEntry> getNextVideos(String argFeed, int argNItems, int argStartIndex){
 		nItems = Integer.toString(argNItems+1);//plus 1 for index correction
 		String index = Integer.toString(argStartIndex+1);//plus one for index correction
@@ -64,49 +64,28 @@ public class YouTube {
 		try {
 			feed = myService.getFeed(new URL(feedUrl), VideoFeed.class);
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (ServiceException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return feed.getEntries();
 	}
-	
-	
-	public static void showAuthorVideos(String argAuthor) {
-		
-		for(int i=0;i< thumbs.length;i++) {
-			((VideoThumb) thumbs[i]).checkAuthorShow(argAuthor);
-		}
-	}
-	public static void unshowAuthorVideos() {
-		for(int i=0;i< thumbs.length;i++) {
-			((VideoThumb) thumbs[i]).unshowAuthorVideos();
-		}
-	}
 
+
+
+	
 	public static void playVideo(String argVideoUrl) {
 		System.out.println(argVideoUrl);
 		String tmpURL;
 		if(!allURLMap.containsKey(argVideoUrl)) {
 			vSF.produceEntity(argVideoUrl);
-//			System.out.println("steg 2");
 			vSF.generateStreamURL();
-	//		System.out.println("steg 3");
 			allURLMap.put(argVideoUrl, vSF.getURLMap());
 		}
-
-		//end of if
-
 		tmpURL = getVideoURL(VideoStreamFetcher.HD, allURLMap.get(argVideoUrl));
-		//boolean tmpURL1 = allURLMap.get(argVideoUrl).containsKey(VideoStreamFetcher.HD);
-		//System.out.println("tmpurl"+tmpURL1);
 		mplayer.run(tmpURL);
-		//System.out.println("steg 4");
 	}
 
 	public static String getVideoURL(String argResolution, HashMap<String, String> argMap) {
@@ -172,7 +151,7 @@ public class YouTube {
 			}
 		}
 	}
-	
+
 
 	public static void favouriteVideosView(int argItems) throws IOException, ServiceException {
 		nItems = Integer.toString(argItems);
@@ -184,7 +163,7 @@ public class YouTube {
 			myPanel.add(thumb);
 		}
 	}
-	
+
 	public static int[] calcMaxThumbs() {
 		int[] tmpint = new int[3];
 		if(isSmall) {
@@ -200,7 +179,7 @@ public class YouTube {
 			tmpint[1] = ((myFrame.getSize().width%VideoThumb.medium.width))/nx;
 			tmpint[2] = ((myFrame.getSize().width%VideoThumb.medium.height))/ny;
 		}
-		
+
 		return tmpint;
 	}
 
@@ -208,13 +187,13 @@ public class YouTube {
 		mplayer.onExit();
 		myFrame.dispose();
 	}
-	
+
 	public static void initNewSubPanel() throws MalformedURLException, IOException, ServiceException {
-		
+
 
 		newSubPanel.init();
 	}
-	
+
 	public static void main(String[] args) {
 
 		try {
@@ -231,7 +210,7 @@ public class YouTube {
 			tabbedPane.addTab("Videos", newSubPanel);
 			//myFrame.add(u);
 			myFrame.add(tabbedPane);
-		//	myFrame.setLayout(new FlowLayout());
+			//	myFrame.setLayout(new FlowLayout());
 			myFrame.setSize(1024, 600);
 			myFrame.setJMenuBar(menuBar);
 			myFrame.addWindowListener(new WindowClose());

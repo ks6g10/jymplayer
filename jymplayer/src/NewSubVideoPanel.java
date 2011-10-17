@@ -18,7 +18,7 @@ public class NewSubVideoPanel extends GeneralVideoPanel {
 		
 		int[] size =super.calcMaxThumbs();
 		this.setLayout(new FlowLayout(0, size[1], size[2]));
-		super.addProgThumbs(size[0]-1);
+		super.addPreThumbs(size[0]-1);
 		EmptyVideoSlot tmp = new EmptyVideoSlot(0);
 		this.add(tmp);
 		super.emptyVideos.add(tmp);
