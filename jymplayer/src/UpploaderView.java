@@ -26,9 +26,9 @@ public class UpploaderView extends JPanel {
 		
 	}
 	
-	public ArrayList<String> getSubsUsers(String argUser) throws MalformedURLException, IOException, ServiceException {
+	public ArrayList<String> getSubsUsers() throws MalformedURLException, IOException, ServiceException {
 		ArrayList<String> subs = new ArrayList<String>();//subscription usernames
-		String feedUrl =  YouTube.BASEURL.concat(argUser).concat(YouTube.SUBSCRIPTIONS);    
+		String feedUrl =  YouTube.BASEURL.concat(YouTube.username).concat(YouTube.SUBSCRIPTIONS);    
 		SubscriptionFeed feed = YouTube.myService.getFeed(new URL(feedUrl), SubscriptionFeed.class);
 		for(SubscriptionEntry entry : feed.getEntries()) {
 			subs.add(entry.getUsername());	
@@ -36,8 +36,8 @@ public class UpploaderView extends JPanel {
 		return subs;
 	}
 	
-	public void init(String argUser) throws MalformedURLException, IOException, ServiceException {
-		getUserProfiles(getSubsUsers(argUser));
+	public void init() throws MalformedURLException, IOException, ServiceException {
+		getUserProfiles(getSubsUsers());
 		this.setLayout(new FlowLayout());
 		this.setVisible(true);
 		this.validate();

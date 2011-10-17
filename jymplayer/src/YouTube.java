@@ -30,6 +30,7 @@ import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
 
 
 public class YouTube {
@@ -210,32 +211,34 @@ public class YouTube {
 	
 	public static void initNewSubPanel() throws MalformedURLException, IOException, ServiceException {
 		
-		newSubPanel.setBackground(globalFade);
-		newSubPanel.setVisible(true);
-		newSubPanel.validate();
+
 		newSubPanel.init();
 	}
 	
 	public static void main(String[] args) {
 
 		try {
-			//newSubPanel = new NewSubVideoPanel();
+			newSubPanel = new NewSubVideoPanel();
 			//myFrame.add(newSubPanel);
+			JTabbedPane tabbedPane = new JTabbedPane();
 			isSmall = true;
 			JMenuBar menuBar = new JMenuBar();
 			menuBar.setBackground(Color.white);
 			menuBar.setVisible(true);
 			menuBar.setPreferredSize(new Dimension(1024, 20));
 			UpploaderView u = new UpploaderView();
-			myFrame.add(u);
+			tabbedPane.addTab("Channel", u);
+			tabbedPane.addTab("Videos", newSubPanel);
+			//myFrame.add(u);
+			myFrame.add(tabbedPane);
 		//	myFrame.setLayout(new FlowLayout());
 			myFrame.setSize(1024, 600);
 			myFrame.setJMenuBar(menuBar);
 			myFrame.addWindowListener(new WindowClose());
 			myFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			myFrame.setVisible(true);
-			u.init(username);
-			//initNewSubPanel();
+			u.init();
+			newSubPanel.init();;
 		}
 		catch(AuthenticationException e) {
 			e.printStackTrace();

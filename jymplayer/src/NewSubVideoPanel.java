@@ -15,22 +15,22 @@ public class NewSubVideoPanel extends GeneralVideoPanel {
 	}
 	
 	public void init() throws MalformedURLException, IOException, ServiceException {
+		
 		int[] size =super.calcMaxThumbs();
-		
 		this.setLayout(new FlowLayout(0, size[1], size[2]));
-		latestSubVideosView(size[0]-1, false);
-		//new ImageIcon("icons\\addnormal.png")
-		
+		super.addProgThumbs(size[0]-1);
 		EmptyVideoSlot tmp = new EmptyVideoSlot(0);
 		this.add(tmp);
 		super.emptyVideos.add(tmp);
+		latestSubVideosView(size[0]-1, true);
 		this.validate();
+		
 	}
 	
 	public void latestSubVideosView(int argItems, boolean isProgressive) throws MalformedURLException, IOException, ServiceException {
 		YouTube.nItems = Integer.toString(argItems);
 		if(isProgressive) {
-			super.addVideoThumbsProg(YouTube.getLatestSubVideos());
+			super.addVideoThumbsProg1(YouTube.getLatestSubVideos());
 		} else {
 			super.addVideoThumbs(YouTube.getLatestSubVideos());
 		}
@@ -45,7 +45,6 @@ public class NewSubVideoPanel extends GeneralVideoPanel {
 			for(int i = 0; i <= argEmptyIndex; i++) {
 				super.emptyVideos.remove(i);
 			}
-		
 			super.addVideoThumbs(asd);
 		
 	}

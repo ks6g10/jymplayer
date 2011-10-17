@@ -5,6 +5,8 @@ import java.awt.event.MouseListener;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.Stack;
+
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -22,28 +24,29 @@ public class VideoThumb extends JPanel implements Comparable<VideoThumb> {
 	/**
 	 * @param args
 	 */
-	private int x,y;
-	private final String title;
-	private final String description;
-	private final String author;
-	private final String lenght;
-	private final String views;
-	private final DateTime date;
-	private final VideoEntry entry;
-	private final YouTubeMediaGroup mediaGroup;
+	private int count;
+	private  String title;
+	private  String description;
+	private  String author;
+	private  String lenght;
+	private  DateTime date;
+	private  VideoEntry entry;
+	private  YouTubeMediaGroup mediaGroup;
 	private URL urlImage;
 	private JLabel imageLabel,titleLabel,authLabel,lengthLabel,dateLabel;
 	private JTextArea descArea;
 	private JTextArea smallTitle;
-	private final SpringLayout layout = new SpringLayout();
-	private final String videoURL;
+	private SpringLayout layout = new SpringLayout();
+	private String videoURL;
 	public static final Dimension small = new Dimension(122, 122);
 	public static final Dimension medium = new Dimension(338, 107);
 	public static HashMap<String, Color> colormap = new HashMap<String, Color>();
-	private final Color bkgColor;
+	private Color bkgColor;
 	private Color titleColor;
 	private final int colorBreak = 125; //when to change the color of title
 	private Border border;
+	private VideoThumb thisThumb = null;
+	
 
 	public static Color getColor(String argUser) {
 		if(colormap.containsKey(argUser))
@@ -60,7 +63,8 @@ public class VideoThumb extends JPanel implements Comparable<VideoThumb> {
 
 		return colormap.get(argUser);
 	}
-
+	
+// Compare-------------------------------------------------------------
 	@Override
 	public boolean equals(Object argThumb) {
 		if(!(argThumb instanceof VideoThumb))
@@ -71,6 +75,13 @@ public class VideoThumb extends JPanel implements Comparable<VideoThumb> {
 	public DateTime getDate() {
 		return date;
 	}
+	public String getVideoURL() {
+		return videoURL;
+	}
+	public int compareTo(VideoThumb argObj) {
+		return ((VideoThumb)argObj).getDate().compareTo(date);
+	}
+// Compare-------------------------------------------------------------
 
 	private String durationToString(long argTime) {
 		String returnString = (argTime/60)+":";
@@ -80,17 +91,41 @@ public class VideoThumb extends JPanel implements Comparable<VideoThumb> {
 		return returnString;
 	}
 
-	public String getVideoURL() {
-		return videoURL;
+	public Color getProgFrameColor() {
+		if(YouTube.globalFade.equals(Color.black))
+			return Color.white;
+		return Color.black;
 	}
-	public int compareTo(VideoThumb argObj) {
-		return ((VideoThumb)argObj).getDate().compareTo(date);
+	
+	
+	public static VideoThumb getProgThumb() {
+		VideoThumb tmp = new VideoThumb();
+		tmp.putSelf(tmp);
+		return tmp;
 	}
-
-	public VideoThumb(VideoEntry argVideo) {
+	
+	private VideoThumb() {
+		 videoURL = "";
+		 //this.setBorder(BorderFactory.createLineBorder(getProgFrameColor()));
+		 this.setPreferredSize(small);
+		 this.setBackground(YouTube.globalFade);
+		 this.add(new EmptyVideoSlot(0));
+		 this.setVisible(true);
+		 
+	}
+	public void replace(VideoEntry argVideo) {
+		this.removeAll();
+		this.init(argVideo);
+		this.setVisible(true);
+	}
+	
+	public void putSelf(VideoThumb argSelf) {
+		thisThumb = argSelf;
+	}
+	
+	private void init(VideoEntry argVideo) {
 		entry = argVideo;
 		mediaGroup = entry.getMediaGroup();
-		views = "Views: 1261";
 		lenght = durationToString(mediaGroup.getDuration());
 		date = mediaGroup.getUploaded();
 		title = entry.getTitle().getPlainText();
@@ -111,6 +146,10 @@ public class VideoThumb extends JPanel implements Comparable<VideoThumb> {
 		//this.setBorder(BorderFactory.createBevelBorder(0));
 		this.validate();
 		this.setVisible(true);
+	}
+
+	public VideoThumb(VideoEntry argVideo) {
+		init(argVideo);
 	}
 
 

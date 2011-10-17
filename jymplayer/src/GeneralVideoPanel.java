@@ -14,15 +14,37 @@ public abstract class GeneralVideoPanel extends JPanel {
 	private int xrow;
 	protected int thumbCount =0;
 	protected ArrayList<EmptyVideoSlot> emptyVideos = new ArrayList<EmptyVideoSlot>(10);
+	protected ArrayList<VideoThumb> progThumbs;
 	public GeneralVideoPanel() {
 		this.setVisible(true);
+		this.setBackground(YouTube.globalFade);
 	}
 	
 	public abstract void fetchReminingVideos(int argEmptyIndex);
 
+	
+	public void addProgThumbs(int argItems) {
+		progThumbs = new ArrayList<VideoThumb>(argItems);
+		for(int i = 0;i < argItems; i++) {
+			progThumbs.add((VideoThumb) this.add(VideoThumb.getProgThumb()));
+		}	
+	}
+	
+	public void addVideoThumbsProg1(List<VideoEntry> argEntries) {
+		VideoThumb tmp;
+		thumbCount += argEntries.size();
+		for(int i=0; i<argEntries.size(); i++) {
+			tmp = progThumbs.get(i);
+			tmp.replace(argEntries.get(i));
+			this.validate();
+			thumbs.add(tmp);
+		}
+		progThumbs.clear();
+	}
 	public void addVideoThumbsProg(List<VideoEntry> argEntries) {
 		VideoThumb tmp;
 		thumbCount += argEntries.size();
+		
 		for(int i=0; i<argEntries.size(); i++) {
 			tmp = new VideoThumb(argEntries.get(i));
 			tmp.setVisible(false);
@@ -61,6 +83,7 @@ public abstract class GeneralVideoPanel extends JPanel {
 
 
 	public ArrayList<VideoThumb> getVideoThumbs(List<VideoEntry> argEntries) {
+		
 		ArrayList<VideoThumb> thumbArrayList = new ArrayList<VideoThumb>(Integer.parseInt(YouTube.nItems));
 		for(int i=0; i<argEntries.size(); i++) {
 			thumbArrayList.add(new VideoThumb(argEntries.get(i)));
@@ -89,33 +112,20 @@ public abstract class GeneralVideoPanel extends JPanel {
 		YouTube.nItems = Integer.toString(tmpint[0]);
 		return tmpint;
 	}
-
 }
 
 class detectResize implements ComponentListener {
 
 	@Override
 	public void componentHidden(ComponentEvent e) {
-		// TODO Auto-generated method stub
-		
 	}
-
 	@Override
 	public void componentMoved(ComponentEvent e) {
-		// TODO Auto-generated method stub
-		
 	}
-
 	@Override
 	public void componentResized(ComponentEvent e) {
-		// TODO Auto-generated method stub
-		
 	}
-
 	@Override
 	public void componentShown(ComponentEvent e) {
-		// TODO Auto-generated method stub
-		
 	}
-	
 }
