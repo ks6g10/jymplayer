@@ -19,7 +19,7 @@ public class ChannelThumb extends JPanel {
 	public ChannelThumb(UserProfileEntry argProfile) throws MalformedURLException {
 		author = argProfile.getUsername();
 		imageURL = new URL(argProfile.getThumbnail().getUrl());
-		this.setPreferredSize(VideoThumb.small);
+		this.setPreferredSize(StatCol.small);
 		imageLabel = new JLabel(new ImageIcon(imageURL));
 		this.add(new JLabel(author));
 		this.setBorder(BorderFactory.createLineBorder(Color.pink));

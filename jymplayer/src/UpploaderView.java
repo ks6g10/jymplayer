@@ -27,7 +27,7 @@ public class UpploaderView extends JPanel {
 	
 	public ArrayList<String> getSubsUsers() throws MalformedURLException, IOException, ServiceException {
 		ArrayList<String> subs = new ArrayList<String>();//subscription usernames
-		String feedUrl =  StatCol.BASEURL.concat(YouTube.username).concat(StatCol.SUBSCRIPTIONS);    
+		String feedUrl =  StatCol.BASEURL.concat(StatCol.username).concat(StatCol.SUBSCRIPTIONS);    
 		SubscriptionFeed feed = StatCol.myService.getFeed(new URL(feedUrl), SubscriptionFeed.class);
 		for(SubscriptionEntry entry : feed.getEntries()) {
 			subs.add(entry.getUsername());	

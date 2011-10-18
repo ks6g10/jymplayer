@@ -1,11 +1,16 @@
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JPanel;
 
 import com.google.gdata.data.youtube.VideoEntry;
+import com.google.gdata.data.youtube.VideoFeed;
+import com.google.gdata.util.ServiceException;
 
 
 public abstract class GeneralVideoPanel extends JPanel {
@@ -21,7 +26,27 @@ public abstract class GeneralVideoPanel extends JPanel {
 	}
 
 	public abstract void fetchReminingVideos(int argEmptyIndex);
-
+	
+	public static List<VideoEntry> getVideos(String argFeed, int argNItems, int argStartIndex){
+		String nItems = Integer.toString(argNItems+1);//plus 1 for index correction
+		String index = Integer.toString(argStartIndex+1);//plus one for index correction
+		String feedUrl = StatCol.BASEURL.concat(StatCol.username);
+		feedUrl = feedUrl.concat(argFeed); // what feed it is
+		feedUrl = feedUrl.concat(StatCol.MAXRESULT).concat(nItems); // max results
+		feedUrl = feedUrl.concat(StatCol.FIRSTINDEX).concat(index);; // first index
+		System.out.println(feedUrl);
+		VideoFeed feed = null;
+		try {
+			feed = StatCol.myService.getFeed(new URL(feedUrl), VideoFeed.class);
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ServiceException e) {
+			e.printStackTrace();
+		}
+		return feed.getEntries();
+	}
 
 	public void addPreThumbs(int argItems) {
 		progThumbs = new ArrayList<VideoThumb>(argItems);
@@ -98,17 +123,17 @@ public abstract class GeneralVideoPanel extends JPanel {
 		int framex = this.getSize().width;
 		int framey = this.getSize().height;
 		if(YouTube.isSmall) {
-			int nx = xrow =  framex/VideoThumb.small.width;
-			int ny = framey/VideoThumb.small.height;
+			int nx = xrow =  framex/StatCol.small.width;
+			int ny = framey/StatCol.small.height;
 			tmpint[0] = ny*nx;
-			tmpint[1] = ((framex%VideoThumb.small.width))/nx;
-			tmpint[2] = ((framey%VideoThumb.small.height))/ny;
+			tmpint[1] = ((framex%StatCol.small.width))/nx;
+			tmpint[2] = ((framey%StatCol.small.height))/ny;
 		} else {
-			int nx =  framex/VideoThumb.medium.width;
-			int ny = framey/VideoThumb.medium.height;
+			int nx =  framex/StatCol.medium.width;
+			int ny = framey/StatCol.medium.height;
 			tmpint[0] = ny*nx;
-			tmpint[1] = ((framex%VideoThumb.medium.width))/nx;
-			tmpint[2] = ((framey%VideoThumb.medium.height))/ny;
+			tmpint[1] = ((framex%StatCol.medium.width))/nx;
+			tmpint[2] = ((framey%StatCol.medium.height))/ny;
 		}
 		YouTube.nItems = Integer.toString(tmpint[0]);
 		return tmpint;

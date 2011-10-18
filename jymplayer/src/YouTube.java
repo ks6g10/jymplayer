@@ -40,7 +40,7 @@ public class YouTube {
 	static HashMap<String, HashMap<String, String>> allURLMap = new HashMap<String, HashMap<String,String>>();
 	static VideoStreamFetcher vSF = new VideoStreamFetcher();
 	static String nItems = "2";
-	static String username = "p0jk3n";
+	
 	static boolean isSmall = true;
 	static int xspace = 5, yspace = 5;
 	static JFrame myFrame = new JFrame();
@@ -48,30 +48,6 @@ public class YouTube {
 	static Component[] thumbs;
 	static NewSubVideoPanel newSubPanel;
 
-	public static List<VideoEntry> getNextVideos(String argFeed, int argNItems, int argStartIndex){
-		nItems = Integer.toString(argNItems+1);//plus 1 for index correction
-		String index = Integer.toString(argStartIndex+1);//plus one for index correction
-		String feedUrl = StatCol.BASEURL.concat(username);
-		feedUrl = feedUrl.concat(argFeed); // what feed it is
-		feedUrl = feedUrl.concat(StatCol.MAXRESULT).concat(nItems); // max results
-		feedUrl = feedUrl.concat(StatCol.FIRSTINDEX).concat(index);; // first index
-		System.out.println(feedUrl);
-		VideoFeed feed = null;
-		try {
-			feed = StatCol.myService.getFeed(new URL(feedUrl), VideoFeed.class);
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ServiceException e) {
-			e.printStackTrace();
-		}
-		return feed.getEntries();
-	}
-
-
-
-	
 	public static void playVideo(String argVideoUrl) {
 		System.out.println(argVideoUrl);
 		String tmpURL;
@@ -103,17 +79,11 @@ public class YouTube {
 
 
 
-	public static List<VideoEntry> getLatestSubVideos() throws MalformedURLException, IOException, ServiceException {
-		String feedUrl =  BASEURL.concat(username).concat(NEWSUBSCIPTIONS).concat(MAXRESULT).concat(nItems);
-		System.out.println(feedUrl);
-		VideoFeed feed = myService.getFeed(new URL(feedUrl), VideoFeed.class);
-		return feed.getEntries();
-	}
 
 	public static List<VideoEntry> getUserEntries() throws MalformedURLException, IOException, ServiceException {
 		VideoFeed videoFeed = null;
-		String feedUrl =  BASEURL.concat(username).concat(UPLOADS);
-		videoFeed = myService.getFeed(new URL(feedUrl), VideoFeed.class);
+		String feedUrl =  StatCol.BASEURL.concat(StatCol.username).concat(StatCol.UPLOADS);
+		videoFeed = StatCol.myService.getFeed(new URL(feedUrl), VideoFeed.class);
 		return videoFeed.getEntries();
 	}
 
@@ -137,57 +107,22 @@ public class YouTube {
 	}
 
 
-	public static void latestSubVideosView(int argItems, boolean isProgressive) throws MalformedURLException, IOException, ServiceException {
-		nItems = Integer.toString(argItems);
-		if(isProgressive) {
-			addVideoThumbsProg(getLatestSubVideos());
-		} else {
-			for(VideoThumb thumb:getVideoThumbs(getLatestSubVideos())) {
-				myPanel.add(thumb);
-			}
-		}
-	}
-
-
 	public static void favouriteVideosView(int argItems) throws IOException, ServiceException {
 		nItems = Integer.toString(argItems);
-		URL metafeedUrl = new URL(BASEURL.concat(username).concat(FAVORITES).concat(MAXRESULT).concat(nItems));
+		URL metafeedUrl = new URL(StatCol.BASEURL.concat(StatCol.username).concat(StatCol.FAVORITES).concat(StatCol.MAXRESULT).concat(nItems));
 		System.out.println("Getting favorite video entries...\n");
-		VideoFeed resultFeed = myService.getFeed(metafeedUrl, VideoFeed.class);
+		VideoFeed resultFeed = StatCol.myService.getFeed(metafeedUrl, VideoFeed.class);
 		List<VideoEntry> entries = resultFeed.getEntries();
 		for(VideoThumb thumb:getVideoThumbs(entries)) {
 			myPanel.add(thumb);
 		}
 	}
 
-	public static int[] calcMaxThumbs() {
-		int[] tmpint = new int[3];
-		if(isSmall) {
-			int nx =  myFrame.getSize().width/VideoThumb.small.width;
-			int ny = myFrame.getSize().height/VideoThumb.small.height;
-			tmpint[0] = ny*nx;
-			tmpint[1] = ((myFrame.getSize().width%VideoThumb.small.width))/nx;
-			tmpint[2] = ((myFrame.getSize().height%VideoThumb.small.height))/ny;
-		} else {
-			int nx =  myFrame.getSize().width/VideoThumb.medium.width;
-			int ny = myFrame.getSize().height/VideoThumb.medium.height;
-			tmpint[0] = ny*nx;
-			tmpint[1] = ((myFrame.getSize().width%VideoThumb.medium.width))/nx;
-			tmpint[2] = ((myFrame.getSize().width%VideoThumb.medium.height))/ny;
-		}
 
-		return tmpint;
-	}
 
 	public static void onExit() {
 		mplayer.onExit();
 		myFrame.dispose();
-	}
-
-	public static void initNewSubPanel() throws MalformedURLException, IOException, ServiceException {
-
-
-		newSubPanel.init();
 	}
 
 	public static void main(String[] args) {
@@ -215,7 +150,7 @@ public class YouTube {
 			myFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			myFrame.setVisible(true);
 			u.init();
-			newSubPanel.init();;
+			newSubPanel.init();
 		}
 		catch(AuthenticationException e) {
 			e.printStackTrace();

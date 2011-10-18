@@ -36,8 +36,6 @@ public class VideoThumb extends JPanel implements Comparable<VideoThumb> {
 	private JTextArea smallTitle;
 	private SpringLayout layout = new SpringLayout();
 	private String videoURL;
-	public static final Dimension small = new Dimension(122, 122);
-	public static final Dimension medium = new Dimension(338, 107);
 	public static HashMap<String, Color> colormap = new HashMap<String, Color>();
 	private Color bkgColor;
 	private Color titleColor;
@@ -92,7 +90,7 @@ public class VideoThumb extends JPanel implements Comparable<VideoThumb> {
 	
 	public VideoThumb() {
 		 videoURL = "";
-		 this.setPreferredSize(small);
+		 this.setPreferredSize(StatCol.small);
 		 this.setBackground(StatCol.globalFade);
 		 this.add(new EmptyVideoSlot(0));
 		 this.setVisible(true);
@@ -137,6 +135,7 @@ public class VideoThumb extends JPanel implements Comparable<VideoThumb> {
 		titleLabel.setToolTipText(title);
 		titleLabel.setForeground(Color.white);
 		smallTitle = new JTextArea(title);
+		smallTitle.setToolTipText(title);
 		smallTitle.setEditable(false);  
 		smallTitle.setCursor(null);
 		smallTitle.setOpaque(false);  
@@ -172,7 +171,7 @@ public class VideoThumb extends JPanel implements Comparable<VideoThumb> {
 
 	public void initSpringSmall() {
 		this.removeAll();
-		this.setPreferredSize(small);
+		this.setPreferredSize(StatCol.small);
 		this.add(smallTitle);
 		this.add(lengthLabel);
 		this.add(authLabel);
@@ -196,15 +195,15 @@ public class VideoThumb extends JPanel implements Comparable<VideoThumb> {
 		authLabel.setHorizontalAlignment(JLabel.CENTER);
 		authLabel.setBackground(myBck);
 		authLabel.setForeground(Color.WHITE);
-		int tmpint = small.height - imageLabel.getPreferredSize().height-4;
-		Dimension tmpD = new Dimension(small.width-2, tmpint);
+		int tmpint = StatCol.small.height - imageLabel.getPreferredSize().height-4;
+		Dimension tmpD = new Dimension(StatCol.small.width-2, tmpint);
 		smallTitle.setPreferredSize(tmpD);
 		this.validate();
 	}
 
 	public void initSpringMedium() {
 		this.removeAll();
-		this.setPreferredSize(medium);
+		this.setPreferredSize(StatCol.medium);
 		this.add(titleLabel);
 		authLabel.setForeground(Color.BLUE);
 		this.add(authLabel);
@@ -226,9 +225,9 @@ public class VideoThumb extends JPanel implements Comparable<VideoThumb> {
 		layout.putConstraint(SpringLayout.SOUTH, lengthLabel, 0, SpringLayout.SOUTH, this);
 		layout.putConstraint(SpringLayout.EAST, dateLabel, 0, SpringLayout.EAST, this);
 		layout.putConstraint(SpringLayout.WEST, lengthLabel, 0, SpringLayout.EAST, imageLabel);
-		int tmpintx = medium.width - authLabel.getPreferredSize().width -5;
+		int tmpintx = StatCol.medium.width - authLabel.getPreferredSize().width -5;
 		titleLabel.setPreferredSize(new Dimension(tmpintx,titleLabel.getPreferredSize().height));
-		int tmpintY = medium.height - dateLabel.getPreferredSize().height-authLabel.getPreferredSize().height;
+		int tmpintY = StatCol.medium.height - dateLabel.getPreferredSize().height-authLabel.getPreferredSize().height;
 		descArea.setPreferredSize(new Dimension(descArea.getPreferredSize().width, tmpintY));
 		this.validate();
 	}
