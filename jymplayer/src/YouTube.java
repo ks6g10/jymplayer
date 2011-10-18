@@ -38,9 +38,7 @@ public class YouTube {
 	
 	static mPlayerWrapper mplayer = new mPlayerWrapper();
 	static HashMap<String, HashMap<String, String>> allURLMap = new HashMap<String, HashMap<String,String>>();
-	static VideoStreamFetcher vSF = new VideoStreamFetcher();
-	static String nItems = "2";
-	
+	static VideoStreamFetcher vSF = new VideoStreamFetcher();	
 	static boolean isSmall = true;
 	static int xspace = 5, yspace = 5;
 	static JFrame myFrame = new JFrame();
@@ -52,11 +50,19 @@ public class YouTube {
 		System.out.println(argVideoUrl);
 		String tmpURL;
 		if(!allURLMap.containsKey(argVideoUrl)) {
-			vSF.produceEntity(argVideoUrl);
+			//vSF = new VideoStreamFetcher();
+			try {
+				vSF.produceEntity(argVideoUrl);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			vSF.generateStreamURL();
-			allURLMap.put(argVideoUrl, vSF.getURLMap());
+			allURLMap.put(argVideoUrl, vSF.getURLMap());//puts urlmap inside allurlmap with video key 
+		//	vSF.getURLMap()
 		}
 		tmpURL = getVideoURL(VideoStreamFetcher.HD, allURLMap.get(argVideoUrl));
+		System.out.println("test"+tmpURL);
 		mplayer.run(tmpURL);
 	}
 
@@ -87,13 +93,6 @@ public class YouTube {
 		return videoFeed.getEntries();
 	}
 
-	public static ArrayList<VideoThumb> getVideoThumbs(List<VideoEntry> argEntries) {
-		ArrayList<VideoThumb> thumbArrayList = new ArrayList<VideoThumb>(Integer.parseInt(nItems));
-		for(int i=0; i<argEntries.size(); i++) {
-			thumbArrayList.add(new VideoThumb(argEntries.get(i)));
-		}
-		return thumbArrayList;
-	}
 
 	public static void addVideoThumbsProg(List<VideoEntry> argEntries) {
 		VideoThumb tmp;
@@ -107,16 +106,16 @@ public class YouTube {
 	}
 
 
-	public static void favouriteVideosView(int argItems) throws IOException, ServiceException {
-		nItems = Integer.toString(argItems);
-		URL metafeedUrl = new URL(StatCol.BASEURL.concat(StatCol.username).concat(StatCol.FAVORITES).concat(StatCol.MAXRESULT).concat(nItems));
-		System.out.println("Getting favorite video entries...\n");
-		VideoFeed resultFeed = StatCol.myService.getFeed(metafeedUrl, VideoFeed.class);
-		List<VideoEntry> entries = resultFeed.getEntries();
-		for(VideoThumb thumb:getVideoThumbs(entries)) {
-			myPanel.add(thumb);
-		}
-	}
+//	public static void favouriteVideosView(int argItems) throws IOException, ServiceException {
+//		nItems = Integer.toString(argItems);
+//		URL metafeedUrl = new URL(StatCol.BASEURL.concat(StatCol.username).concat(StatCol.FAVORITES).concat(StatCol.MAXRESULT).concat(nItems));
+//		System.out.println("Getting favorite video entries...\n");
+//		VideoFeed resultFeed = StatCol.myService.getFeed(metafeedUrl, VideoFeed.class);
+//		List<VideoEntry> entries = resultFeed.getEntries();
+//		for(VideoThumb thumb:getVideoThumbs(entries)) {
+//			myPanel.add(thumb);
+//		}
+//	}
 
 
 
@@ -132,24 +131,26 @@ public class YouTube {
 			//myFrame.add(newSubPanel);
 			JTabbedPane tabbedPane = new JTabbedPane();
 			isSmall = true;
-			tabbedPane.add(new JButton("asd"));
+			//tabbedPane.add(new JButton("asd"));
 			JMenuBar menuBar = new JMenuBar();
 			//menuBar.add(tabbedPane);
 			menuBar.setBackground(Color.white);
 			menuBar.setVisible(true);
-			menuBar.setPreferredSize(new Dimension(1024, 20));
+			//menuBar.setPreferredSize(new Dimension(1024, 20));
 			UpploaderView u = new UpploaderView();
 			tabbedPane.addTab("Channel", u);
 			tabbedPane.addTab("Videos", newSubPanel);
 			//myFrame.add(u);
-			myFrame.add(tabbedPane);
+			//myFrame.add(tabbedPane);
+			myFrame.add(newSubPanel);
 			//	myFrame.setLayout(new FlowLayout());
-			myFrame.setSize(1024, 600);
-			myFrame.setJMenuBar(menuBar);
+			
+			myFrame.setSize(1600, 1050);
+			//myFrame.setJMenuBar(menuBar);
 			myFrame.addWindowListener(new WindowClose());
 			myFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			myFrame.setVisible(true);
-			u.init();
+			//u.init();
 			newSubPanel.init();
 		}
 		catch(AuthenticationException e) {
