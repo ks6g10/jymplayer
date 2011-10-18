@@ -17,7 +17,7 @@ public abstract class GeneralVideoPanel extends JPanel {
 	protected ArrayList<VideoThumb> progThumbs;
 	public GeneralVideoPanel() {
 		this.setVisible(true);
-		this.setBackground(YouTube.globalFade);
+		this.setBackground(StatCol.globalFade);
 	}
 
 	public abstract void fetchReminingVideos(int argEmptyIndex);

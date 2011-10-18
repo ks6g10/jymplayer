@@ -56,7 +56,9 @@ public class VideoThumb extends JPanel implements Comparable<VideoThumb> {
 		int g = h %255;
 		h >>=8;
 		int b = h %255;
-		return colormap.put(argUser,new Color(r,g,b));
+		Color tmp = new Color(r,g,b);
+		colormap.put(argUser,tmp);
+		return tmp;
 	}
 	
 // Compare-------------------------------------------------------------
@@ -84,19 +86,14 @@ public class VideoThumb extends JPanel implements Comparable<VideoThumb> {
 		returnString += argTime%60;
 		return returnString;
 	}
-	public Color getProgFrameColor() {
-		if(YouTube.globalFade.equals(Color.black))
-			return Color.white;
-		return Color.black;
-	}
-	
+
 	
 
 	
 	public VideoThumb() {
 		 videoURL = "";
 		 this.setPreferredSize(small);
-		 this.setBackground(YouTube.globalFade);
+		 this.setBackground(StatCol.globalFade);
 		 this.add(new EmptyVideoSlot(0));
 		 this.setVisible(true);
 		 
@@ -149,9 +146,6 @@ public class VideoThumb extends JPanel implements Comparable<VideoThumb> {
 		smallTitle.setFont(getFont().deriveFont((float) 10));
 		smallTitle.setRows(2);
 		//author,date length and description area
-//		urlImage = new URL(mediaGroup.getThumbnails().get(0).getUrl());
-//		imageLabel = new JLabel(new ImageIcon(urlImage));
-	
 		imageLabel = new JLabel(new ImageIcon(new URL(mediaGroup.getThumbnails().get(0).getUrl())));
 		authLabel = new JLabel(author);
 		authLabel.addMouseListener(new mouseOverAuthor(this));
@@ -175,9 +169,6 @@ public class VideoThumb extends JPanel implements Comparable<VideoThumb> {
 			initSpringMedium();
 		}
 	}
-
-
-
 
 	public void initSpringSmall() {
 		this.removeAll();
@@ -266,9 +257,9 @@ public class VideoThumb extends JPanel implements Comparable<VideoThumb> {
 			}
 		} else {
 			if(!author.equals(argAuthor)) {
-				this.setBackground(YouTube.globalFade);
-				smallTitle.setForeground(YouTube.globalFade);
-				this.setBorder(BorderFactory.createLineBorder(YouTube.globalFade));
+				this.setBackground(StatCol.globalFade);
+				smallTitle.setForeground(StatCol.globalFade);
+				this.setBorder(BorderFactory.createLineBorder(StatCol.globalFade));
 				this.setOpaque(!isOpaque());
 				imageLabel.setOpaque(!isOpaque());
 			}

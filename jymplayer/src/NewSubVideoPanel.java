@@ -38,7 +38,7 @@ public class NewSubVideoPanel extends GeneralVideoPanel {
 
 	@Override
 	public void fetchReminingVideos(int argEmptyIndex) {
-			List<VideoEntry> asd = YouTube.getNextVideos(YouTube.NEWSUBSCIPTIONS, argEmptyIndex, super.thumbs.size());
+			List<VideoEntry> asd = YouTube.getNextVideos(StatCol.NEWSUBSCIPTIONS, argEmptyIndex, super.thumbs.size());
 			for(int i = 0; i <= argEmptyIndex; i++) {
 				this.remove(super.emptyVideos.get(i));
 			}

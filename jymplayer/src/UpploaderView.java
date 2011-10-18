@@ -17,10 +17,9 @@ public class UpploaderView extends JPanel {
 
 	
 	public void getUserProfiles(ArrayList<String> argUsernames) throws MalformedURLException, IOException, ServiceException {
-		String feedUrl = YouTube.BASEURL;
-		ArrayList<UserProfileEntry> tmpUserProfiles = new ArrayList<UserProfileEntry>(argUsernames.size());
+		String feedUrl = StatCol.BASEURL;
 		for(String user: argUsernames) {
-			UserProfileEntry entry = YouTube.myService.getEntry(new URL( feedUrl.concat(user)), UserProfileEntry.class);//getFeed(new URL(feedUrl.concat(user)), UserProfileFeed.class);
+			UserProfileEntry entry = StatCol.myService.getEntry(new URL( feedUrl.concat(user)), UserProfileEntry.class);//getFeed(new URL(feedUrl.concat(user)), UserProfileFeed.class);
 			this.add(new ChannelThumb(entry));
 		}
 		
@@ -28,8 +27,8 @@ public class UpploaderView extends JPanel {
 	
 	public ArrayList<String> getSubsUsers() throws MalformedURLException, IOException, ServiceException {
 		ArrayList<String> subs = new ArrayList<String>();//subscription usernames
-		String feedUrl =  YouTube.BASEURL.concat(YouTube.username).concat(YouTube.SUBSCRIPTIONS);    
-		SubscriptionFeed feed = YouTube.myService.getFeed(new URL(feedUrl), SubscriptionFeed.class);
+		String feedUrl =  StatCol.BASEURL.concat(YouTube.username).concat(StatCol.SUBSCRIPTIONS);    
+		SubscriptionFeed feed = StatCol.myService.getFeed(new URL(feedUrl), SubscriptionFeed.class);
 		for(SubscriptionEntry entry : feed.getEntries()) {
 			subs.add(entry.getUsername());	
 		}

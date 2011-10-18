@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
@@ -34,35 +35,30 @@ import javax.swing.JTabbedPane;
 
 
 public class YouTube {
-	static YouTubeService myService = new YouTubeService("My Application");
+	
 	static mPlayerWrapper mplayer = new mPlayerWrapper();
 	static HashMap<String, HashMap<String, String>> allURLMap = new HashMap<String, HashMap<String,String>>();
 	static VideoStreamFetcher vSF = new VideoStreamFetcher();
 	static String nItems = "2";
 	static String username = "p0jk3n";
-	static final String MAXRESULT = "?max-results=";
-	static final String BASEURL = "http://gdata.youtube.com/feeds/api/users/";
-	static final String FAVORITES = "/favorites";
-	static final String SUBSCRIPTIONS = "/subscriptions";
-	static final String UPLOADS = "/uploads";
-	static final String NEWSUBSCIPTIONS ="/newsubscriptionvideos";
-	static final String FIRSTINDEX = "&start-index=";
 	static boolean isSmall = true;
 	static int xspace = 5, yspace = 5;
 	static JFrame myFrame = new JFrame();
 	static JPanel myPanel = new JPanel();
 	static Component[] thumbs;
-	static Color globalFade = Color.black;
 	static NewSubVideoPanel newSubPanel;
 
 	public static List<VideoEntry> getNextVideos(String argFeed, int argNItems, int argStartIndex){
 		nItems = Integer.toString(argNItems+1);//plus 1 for index correction
 		String index = Integer.toString(argStartIndex+1);//plus one for index correction
-		String feedUrl =  BASEURL.concat(username).concat(argFeed).concat(MAXRESULT).concat(nItems).concat(FIRSTINDEX).concat(index);
+		String feedUrl = StatCol.BASEURL.concat(username);
+		feedUrl = feedUrl.concat(argFeed); // what feed it is
+		feedUrl = feedUrl.concat(StatCol.MAXRESULT).concat(nItems); // max results
+		feedUrl = feedUrl.concat(StatCol.FIRSTINDEX).concat(index);; // first index
 		System.out.println(feedUrl);
 		VideoFeed feed = null;
 		try {
-			feed = myService.getFeed(new URL(feedUrl), VideoFeed.class);
+			feed = StatCol.myService.getFeed(new URL(feedUrl), VideoFeed.class);
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -201,7 +197,9 @@ public class YouTube {
 			//myFrame.add(newSubPanel);
 			JTabbedPane tabbedPane = new JTabbedPane();
 			isSmall = true;
+			tabbedPane.add(new JButton("asd"));
 			JMenuBar menuBar = new JMenuBar();
+			//menuBar.add(tabbedPane);
 			menuBar.setBackground(Color.white);
 			menuBar.setVisible(true);
 			menuBar.setPreferredSize(new Dimension(1024, 20));

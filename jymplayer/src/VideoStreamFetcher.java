@@ -65,7 +65,6 @@ public static final String LD = "17";
 	public void generateStreamURL() {
 		try {
 			while(lineRead != null) {
-
 				lineRead = textreader.readLine();
 				if(lineRead !=null && lineRead.matches("(.*)generate_204(.*)")) {
 					lineRead = lineRead.replaceFirst("img.src = '?", "");					
