@@ -66,25 +66,20 @@ public class mPlayerWrapper {
 	}
 	
 	public void run(String argURL) {
-			// the standard input of MPlayer
 		//check if mplayer have quit
-		System.out.println(argURL);
+		if(argURL == null)
+			return;
 		try {
 			if(mplayerProcess.exitValue() == 0) {
 				initProcess();//if, just restart
 			}
 				
 	 } catch (IllegalThreadStateException exc) {
-		 System.out.println("not exit"+exc.getMessage());
+		 System.out.println(exc.getMessage());
      }
 			System.out.println("loading");
 			mplayerIn.println("loadfile \""+argURL +"\" 0");
-			//mplayerIn.print("\n");
 			mplayerIn.flush();
-//			mplayerIn.print("set_property time_pos 300");
-//			mplayerIn.print("\n");
-//			mplayerIn.flush();
-		
 	}
 	
 }
@@ -127,6 +122,7 @@ class LineRedirecter extends Thread {
             
             // read line by line
             while ( (line = reader.readLine()) != null) {
+            	//System.out.println(line);
                 printStream.println(line);
             }
         } catch (IOException ioe) {

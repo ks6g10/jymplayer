@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
@@ -34,57 +35,34 @@ import javax.swing.JTabbedPane;
 
 
 public class YouTube {
-	static YouTubeService myService = new YouTubeService("My Application");
+	
 	static mPlayerWrapper mplayer = new mPlayerWrapper();
 	static HashMap<String, HashMap<String, String>> allURLMap = new HashMap<String, HashMap<String,String>>();
-	static VideoStreamFetcher vSF = new VideoStreamFetcher();
-	static String nItems = "2";
-	static String username = "p0jk3n";
-	static final String MAXRESULT = "?max-results=";
-	static final String BASEURL = "http://gdata.youtube.com/feeds/api/users/";
-	static final String FAVORITES = "/favorites";
-	static final String SUBSCRIPTIONS = "/subscriptions";
-	static final String UPLOADS = "/uploads";
-	static final String NEWSUBSCIPTIONS ="/newsubscriptionvideos";
-	static final String FIRSTINDEX = "&start-index=";
+	static VideoStreamFetcher vSF = new VideoStreamFetcher();	
 	static boolean isSmall = true;
 	static int xspace = 5, yspace = 5;
 	static JFrame myFrame = new JFrame();
 	static JPanel myPanel = new JPanel();
 	static Component[] thumbs;
-	static Color globalFade = Color.black;
 	static NewSubVideoPanel newSubPanel;
 
-	public static List<VideoEntry> getNextVideos(String argFeed, int argNItems, int argStartIndex){
-		nItems = Integer.toString(argNItems+1);//plus 1 for index correction
-		String index = Integer.toString(argStartIndex+1);//plus one for index correction
-		String feedUrl =  BASEURL.concat(username).concat(argFeed).concat(MAXRESULT).concat(nItems).concat(FIRSTINDEX).concat(index);
-		System.out.println(feedUrl);
-		VideoFeed feed = null;
-		try {
-			feed = myService.getFeed(new URL(feedUrl), VideoFeed.class);
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ServiceException e) {
-			e.printStackTrace();
-		}
-		return feed.getEntries();
-	}
-
-
-
-	
 	public static void playVideo(String argVideoUrl) {
 		System.out.println(argVideoUrl);
 		String tmpURL;
 		if(!allURLMap.containsKey(argVideoUrl)) {
-			vSF.produceEntity(argVideoUrl);
+			//vSF = new VideoStreamFetcher();
+			try {
+				vSF.produceEntity(argVideoUrl);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			vSF.generateStreamURL();
-			allURLMap.put(argVideoUrl, vSF.getURLMap());
+			allURLMap.put(argVideoUrl, vSF.getURLMap());//puts urlmap inside allurlmap with video key 
+		//	vSF.getURLMap()
 		}
 		tmpURL = getVideoURL(VideoStreamFetcher.HD, allURLMap.get(argVideoUrl));
+		System.out.println("test"+tmpURL);
 		mplayer.run(tmpURL);
 	}
 
@@ -107,27 +85,14 @@ public class YouTube {
 
 
 
-	public static List<VideoEntry> getLatestSubVideos() throws MalformedURLException, IOException, ServiceException {
-		String feedUrl =  BASEURL.concat(username).concat(NEWSUBSCIPTIONS).concat(MAXRESULT).concat(nItems);
-		System.out.println(feedUrl);
-		VideoFeed feed = myService.getFeed(new URL(feedUrl), VideoFeed.class);
-		return feed.getEntries();
-	}
 
 	public static List<VideoEntry> getUserEntries() throws MalformedURLException, IOException, ServiceException {
 		VideoFeed videoFeed = null;
-		String feedUrl =  BASEURL.concat(username).concat(UPLOADS);
-		videoFeed = myService.getFeed(new URL(feedUrl), VideoFeed.class);
+		String feedUrl =  StatCol.BASEURL.concat(StatCol.username).concat(StatCol.UPLOADS);
+		videoFeed = StatCol.myService.getFeed(new URL(feedUrl), VideoFeed.class);
 		return videoFeed.getEntries();
 	}
 
-	public static ArrayList<VideoThumb> getVideoThumbs(List<VideoEntry> argEntries) {
-		ArrayList<VideoThumb> thumbArrayList = new ArrayList<VideoThumb>(Integer.parseInt(nItems));
-		for(int i=0; i<argEntries.size(); i++) {
-			thumbArrayList.add(new VideoThumb(argEntries.get(i)));
-		}
-		return thumbArrayList;
-	}
 
 	public static void addVideoThumbsProg(List<VideoEntry> argEntries) {
 		VideoThumb tmp;
@@ -141,57 +106,22 @@ public class YouTube {
 	}
 
 
-	public static void latestSubVideosView(int argItems, boolean isProgressive) throws MalformedURLException, IOException, ServiceException {
-		nItems = Integer.toString(argItems);
-		if(isProgressive) {
-			addVideoThumbsProg(getLatestSubVideos());
-		} else {
-			for(VideoThumb thumb:getVideoThumbs(getLatestSubVideos())) {
-				myPanel.add(thumb);
-			}
-		}
-	}
+//	public static void favouriteVideosView(int argItems) throws IOException, ServiceException {
+//		nItems = Integer.toString(argItems);
+//		URL metafeedUrl = new URL(StatCol.BASEURL.concat(StatCol.username).concat(StatCol.FAVORITES).concat(StatCol.MAXRESULT).concat(nItems));
+//		System.out.println("Getting favorite video entries...\n");
+//		VideoFeed resultFeed = StatCol.myService.getFeed(metafeedUrl, VideoFeed.class);
+//		List<VideoEntry> entries = resultFeed.getEntries();
+//		for(VideoThumb thumb:getVideoThumbs(entries)) {
+//			myPanel.add(thumb);
+//		}
+//	}
 
 
-	public static void favouriteVideosView(int argItems) throws IOException, ServiceException {
-		nItems = Integer.toString(argItems);
-		URL metafeedUrl = new URL(BASEURL.concat(username).concat(FAVORITES).concat(MAXRESULT).concat(nItems));
-		System.out.println("Getting favorite video entries...\n");
-		VideoFeed resultFeed = myService.getFeed(metafeedUrl, VideoFeed.class);
-		List<VideoEntry> entries = resultFeed.getEntries();
-		for(VideoThumb thumb:getVideoThumbs(entries)) {
-			myPanel.add(thumb);
-		}
-	}
-
-	public static int[] calcMaxThumbs() {
-		int[] tmpint = new int[3];
-		if(isSmall) {
-			int nx =  myFrame.getSize().width/VideoThumb.small.width;
-			int ny = myFrame.getSize().height/VideoThumb.small.height;
-			tmpint[0] = ny*nx;
-			tmpint[1] = ((myFrame.getSize().width%VideoThumb.small.width))/nx;
-			tmpint[2] = ((myFrame.getSize().height%VideoThumb.small.height))/ny;
-		} else {
-			int nx =  myFrame.getSize().width/VideoThumb.medium.width;
-			int ny = myFrame.getSize().height/VideoThumb.medium.height;
-			tmpint[0] = ny*nx;
-			tmpint[1] = ((myFrame.getSize().width%VideoThumb.medium.width))/nx;
-			tmpint[2] = ((myFrame.getSize().width%VideoThumb.medium.height))/ny;
-		}
-
-		return tmpint;
-	}
 
 	public static void onExit() {
 		mplayer.onExit();
 		myFrame.dispose();
-	}
-
-	public static void initNewSubPanel() throws MalformedURLException, IOException, ServiceException {
-
-
-		newSubPanel.init();
 	}
 
 	public static void main(String[] args) {
@@ -201,23 +131,27 @@ public class YouTube {
 			//myFrame.add(newSubPanel);
 			JTabbedPane tabbedPane = new JTabbedPane();
 			isSmall = true;
+			//tabbedPane.add(new JButton("asd"));
 			JMenuBar menuBar = new JMenuBar();
+			//menuBar.add(tabbedPane);
 			menuBar.setBackground(Color.white);
 			menuBar.setVisible(true);
-			menuBar.setPreferredSize(new Dimension(1024, 20));
+			//menuBar.setPreferredSize(new Dimension(1024, 20));
 			UpploaderView u = new UpploaderView();
 			tabbedPane.addTab("Channel", u);
 			tabbedPane.addTab("Videos", newSubPanel);
 			//myFrame.add(u);
-			myFrame.add(tabbedPane);
+			//myFrame.add(tabbedPane);
+			myFrame.add(newSubPanel);
 			//	myFrame.setLayout(new FlowLayout());
-			myFrame.setSize(1024, 600);
-			myFrame.setJMenuBar(menuBar);
+			
+			myFrame.setSize(1600, 1050);
+			//myFrame.setJMenuBar(menuBar);
 			myFrame.addWindowListener(new WindowClose());
 			myFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			myFrame.setVisible(true);
-			u.init();
-			newSubPanel.init();;
+			//u.init();
+			newSubPanel.init();
 		}
 		catch(AuthenticationException e) {
 			e.printStackTrace();

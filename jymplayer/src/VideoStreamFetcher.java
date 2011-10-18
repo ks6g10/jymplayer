@@ -15,32 +15,38 @@ import org.apache.http.protocol.HttpContext;
 
 public class VideoStreamFetcher {
 
-private	HashMap<String, String> sourcecodevideourls = new HashMap<String, String>();
-private	HttpContext	localContext = null;
-private	DefaultHttpClient httpClient = new DefaultHttpClient();
-private	HttpResponse response = null;
-private	BufferedReader textreader = null;
+	private	HashMap<String, String> sourcecodevideourls = new HashMap<String, String>();
+	private	HttpContext	localContext = null;
+	private	DefaultHttpClient httpClient;// = new DefaultHttpClient();
+	private	HttpResponse response = null;
+	private	BufferedReader textreader = null;
 
-private	String lineRead = "";
-private	String s403VideoURL = "";
-private	String videoURL = "";
-private HttpGet httpGet = null;
-private HttpHost target = null;
-public static final String FULLHD = "37";
-public static final String HD = "22";
-public static final String SD = "18";
-public static final String LD = "17";
+	private	String lineRead;// = "";
+	private	String s403VideoURL = "";
+	private	String videoURL = "";
+	private HttpGet httpGet = null;
+	private HttpHost target = null;
+	private boolean hasRun = false;
+	public static final String FULLHD = "37";
+	public static final String HD = "22";
+	public static final String SD = "18";
+	public static final String LD = "17";
 
 
-	public void produceEntity(String argvideoUrl) {
+	public void produceEntity(String argvideoUrl) throws IOException {
+		if(hasRun) {
+			sourcecodevideourls.clear();
+		}
+		hasRun = true;
 		httpClient = new DefaultHttpClient();
 		argvideoUrl = argvideoUrl.replaceFirst("http://","");
 		httpClient.getParams().setParameter(ClientPNames.COOKIE_POLICY, CookiePolicy.BEST_MATCH);
-		httpGet = new HttpGet("/"+argvideoUrl.split("/")[1]);
-		target = new HttpHost(argvideoUrl.split("/")[0],80,"http");
-	
+		String[] tmp = argvideoUrl.split("/"); //split host = www.youtube.com with extension = /watch?v=GIBQpAsVoWo
+		httpGet = new HttpGet("/"+tmp[1]); // add / to replace splitter
+		target = new HttpHost(tmp[0],80,"http");
+
 		try {
-			
+
 			response = httpClient.execute(target,httpGet,localContext);
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
@@ -64,10 +70,11 @@ public static final String LD = "17";
 
 	public void generateStreamURL() {
 		try {
-			while(lineRead != null) {
-
+			do{
 				lineRead = textreader.readLine();
-				if(lineRead !=null && lineRead.matches("(.*)generate_204(.*)")) {
+				if(lineRead == null)
+					return;
+				if(lineRead.matches("(.*)generate_204(.*)")) {
 					lineRead = lineRead.replaceFirst("img.src = '?", "");					
 					lineRead = lineRead.replaceFirst("';", "");							
 					lineRead = lineRead.replaceFirst("\\u0026", "&");						
@@ -75,40 +82,36 @@ public static final String LD = "17";
 					lineRead = lineRead.replaceAll("\\s", "");
 					s403VideoURL = lineRead.replaceFirst("generate_204", "videoplayback");
 					videoURL = lineRead;
-					System.out.println(s403VideoURL);
+					//System.out.println("s403"+s403VideoURL);
 				}
-				if(lineRead !=null && lineRead.matches("(.*)\"url_encoded_fmt_stream_map\":(.*)")) {
+				if(lineRead.matches("(.*)\"url_encoded_fmt_stream_map\":(.*)")) {
 					lineRead = lineRead.replaceFirst(".*\"url_encoded_fmt_stream_map\": \"", "").replaceFirst("\".*", "").replace("%25","%").replace("\\u0026", "&").replace("\\", "");
 					String[] urlStrings = lineRead.split(",");
 					int tmpRes = 0;
 					for (String urlString : urlStrings) {
-						String[] fmtUrlPair = urlString.split("&itag="); // 2011-08-20 \\|
-						//						fmtUrlPair[0] = fmtUrlPair[0].replaceFirst("url=http%3A%2F%2F", "http://"); // 2011-08-20 key-value exchanged
-						//						fmtUrlPair[0] = fmtUrlPair[0].replaceAll("%3F","?").replaceAll("%2F", "/").replaceAll("%3D","=").replaceAll("%26", "&");
-						//						fmtUrlPair[0] = fmtUrlPair[0].replaceFirst("&quality=.*", "");
+						String[] fmtUrlPair = urlString.split("&itag=");
 						fmtUrlPair[0] = formatURLPair(fmtUrlPair[0]);
-
 						tmpRes = Integer.parseInt(fmtUrlPair[1]);
 						if(tmpRes == 22 || tmpRes == 37 || tmpRes == 18 || tmpRes == 17) //better to use strings?
 							sourcecodevideourls.put(fmtUrlPair[1], fmtUrlPair[0]); // save that URL
-
+						//System.out.println("fmtUrlPair "+fmtUrlPair[0]);
 					} // for
-
 				}
-			}
+			}while(lineRead != null);
+			textreader.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}catch (java.lang.ArrayIndexOutOfBoundsException aioobe) {
-		} finally {
+		} finally {	
 			httpClient.getConnectionManager().closeExpiredConnections();	
 			httpClient.getConnectionManager().shutdown();
 		}
 	}
-	
+
 	public HashMap<String, String> getURLMap() {
 		return sourcecodevideourls;
 	}
-	
+
 
 
 	private String formatURLPair(String argUrlPair) {

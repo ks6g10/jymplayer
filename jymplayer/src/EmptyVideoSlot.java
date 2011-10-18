@@ -16,9 +16,9 @@ public class EmptyVideoSlot extends JLabel {
 		hover = new ImageIcon(getClass().getResource("icons/addhover.png"));
 		click = new ImageIcon(getClass().getResource("icons/addclick.png"));
 		this.setIcon(normal);
-		this.setPreferredSize(VideoThumb.small);
+		this.setPreferredSize(StatCol.small);
 		this.setOpaque(true);
-		this.setBackground(YouTube.globalFade);
+		this.setBackground(StatCol.globalFade);
 		this.addMouseListener(new SlotMouseHandler());
 	}
 	
