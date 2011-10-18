@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.JPanel;
@@ -34,7 +35,6 @@ public abstract class GeneralVideoPanel extends JPanel {
 		feedUrl = feedUrl.concat(argFeed); // what feed it is
 		feedUrl = feedUrl.concat(StatCol.MAXRESULT).concat(nItems); // max results
 		feedUrl = feedUrl.concat(StatCol.FIRSTINDEX).concat(index);; // first index
-		System.out.println(feedUrl);
 		VideoFeed feed = null;
 		try {
 			feed = StatCol.myService.getFeed(new URL(feedUrl), VideoFeed.class);
@@ -50,21 +50,22 @@ public abstract class GeneralVideoPanel extends JPanel {
 
 	public void addPreThumbs(int argItems) {
 		progThumbs = new ArrayList<VideoThumb>(argItems);
-		for(int i = 0;i < argItems; i++) {
+		for(int i = 0;i <= argItems; i++) {
 			progThumbs.add((VideoThumb) this.add(new VideoThumb()));
 		}	
+		System.out.println(progThumbs.size());
 	}
 
 	public void addVideoThumbsProg1(List<VideoEntry> argEntries) {
 		VideoThumb tmp;
 		thumbCount += argEntries.size();
-		for(int i=0; i<argEntries.size(); i++) {
-			tmp = progThumbs.get(i);
-			tmp.replace(argEntries.get(i));
-			this.validate();
+		Iterator<VideoThumb> iter = progThumbs.iterator();
+		for(VideoEntry entry: argEntries) {
+			tmp = iter.next();
+			iter.remove();
+			tmp.replace(entry);
 			thumbs.add(tmp);
 		}
-		progThumbs.clear();
 	}
 	public void addVideoThumbsProg(List<VideoEntry> argEntries) {
 		VideoThumb tmp;
@@ -110,7 +111,7 @@ public abstract class GeneralVideoPanel extends JPanel {
 
 	public ArrayList<VideoThumb> getVideoThumbs(List<VideoEntry> argEntries) {
 
-		ArrayList<VideoThumb> thumbArrayList = new ArrayList<VideoThumb>(Integer.parseInt(YouTube.nItems));
+		ArrayList<VideoThumb> thumbArrayList = new ArrayList<VideoThumb>(Integer.parseInt("32"));
 		for(int i=0; i<argEntries.size(); i++) {
 			thumbArrayList.add(new VideoThumb(argEntries.get(i)));
 		}
@@ -135,7 +136,8 @@ public abstract class GeneralVideoPanel extends JPanel {
 			tmpint[1] = ((framex%StatCol.medium.width))/nx;
 			tmpint[2] = ((framey%StatCol.medium.height))/ny;
 		}
-		YouTube.nItems = Integer.toString(tmpint[0]);
+		
+		
 		return tmpint;
 	}
 }
