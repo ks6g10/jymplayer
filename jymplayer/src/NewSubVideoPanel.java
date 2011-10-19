@@ -22,7 +22,7 @@ public class NewSubVideoPanel extends GeneralVideoPanel {
 		subLayout = new FlowLayout();
 		this.setLayout(new FlowLayout(FlowLayout.RIGHT, size[1], size[2]));
 		System.out.println("size"+size[0]);
-		super.addPreThumbs(size[0]);
+		//super.addPreThumbs(size[0]);
 		EmptyVideoSlot tmp = new EmptyVideoSlot(0);
 		EmptyVideoSlot tmp1 = new EmptyVideoSlot(1);
 		this.add(tmp);
@@ -40,12 +40,13 @@ public class NewSubVideoPanel extends GeneralVideoPanel {
 			int firstIndex = 0;
 			while(nItems>0) {
 				int tmpitems = nItems;
+				System.out.println("nitems= "+nItems+" startindex "+firstIndex);
 				if(nItems > 49) {
-					super.addVideoThumbsProg1(super.getVideos(StatCol.NEWSUBSCIPTIONS,49,firstIndex));
+					super.addVideoThumbsProg(super.getVideos(StatCol.NEWSUBSCIPTIONS,49,firstIndex));
 					nItems -= 49;
-					firstIndex = nItems;
+					firstIndex +=49 ;
 				} else {
-					super.addVideoThumbsProg1(super.getVideos(StatCol.NEWSUBSCIPTIONS,nItems,firstIndex));
+					super.addVideoThumbsProg(super.getVideos(StatCol.NEWSUBSCIPTIONS,nItems,firstIndex));
 					nItems = 0;
 				}		
 			}

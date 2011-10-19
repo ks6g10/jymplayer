@@ -117,6 +117,7 @@ public abstract class GeneralVideoPanel extends JPanel {
 
 	//nItems redundant if you call calcMaxThumbs
 	public int[] calcMaxThumbs() {
+		
 		int[] tmpint = new int[3];
 		int framex = this.getSize().width;
 		int framey = this.getSize().height;

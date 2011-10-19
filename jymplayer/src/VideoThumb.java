@@ -253,6 +253,7 @@ public class VideoThumb extends JPanel implements Comparable<VideoThumb> {
 				this.setBorder(border);
 				this.setOpaque(!isOpaque());
 				imageLabel.setOpaque(!isOpaque());
+				this.validate();
 			}
 		} else {
 			if(!author.equals(argAuthor)) {
@@ -261,6 +262,9 @@ public class VideoThumb extends JPanel implements Comparable<VideoThumb> {
 				this.setBorder(BorderFactory.createLineBorder(StatCol.globalFade));
 				this.setOpaque(!isOpaque());
 				imageLabel.setOpaque(!isOpaque());
+				this.validate();
+			} else {
+			//	System.out.println(author);
 			}
 		}
 	}

@@ -78,8 +78,11 @@ public class mPlayerWrapper {
 		 System.out.println(exc.getMessage());
      }
 			System.out.println("loading");
-			mplayerIn.println("loadfile \""+argURL +"\" 0");
+			mplayerIn.println("-send-action play \""+argURL +"\" ");
 			mplayerIn.flush();
+//			System.out.println("loading");
+//			mplayerIn.println("loadfile \""+argURL +"\" 0");
+//			mplayerIn.flush();
 	}
 	
 }
@@ -122,7 +125,7 @@ class LineRedirecter extends Thread {
             
             // read line by line
             while ( (line = reader.readLine()) != null) {
-            	//System.out.println(line);
+            	System.out.println(line);
                 printStream.println(line);
             }
         } catch (IOException ioe) {

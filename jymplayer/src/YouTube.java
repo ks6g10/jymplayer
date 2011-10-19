@@ -18,6 +18,7 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.LayoutManager;
+import java.awt.Toolkit;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.IOException;
@@ -144,14 +145,16 @@ public class YouTube {
 			//myFrame.add(tabbedPane);
 			myFrame.add(newSubPanel);
 			//	myFrame.setLayout(new FlowLayout());
-			
-			myFrame.setSize(1600, 1050);
+			Toolkit toolkit = Toolkit.getDefaultToolkit();
+			System.out.println(toolkit.getScreenSize().width+"x"+toolkit.getScreenSize().height);
+			myFrame.setSize(1900, 1080);
 			//myFrame.setJMenuBar(menuBar);
 			myFrame.addWindowListener(new WindowClose());
 			myFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			myFrame.setVisible(true);
 			//u.init();
 			newSubPanel.init();
+		
 		}
 		catch(AuthenticationException e) {
 			e.printStackTrace();
