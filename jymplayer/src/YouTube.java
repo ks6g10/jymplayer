@@ -147,7 +147,7 @@ public class YouTube {
 			//	myFrame.setLayout(new FlowLayout());
 			Toolkit toolkit = Toolkit.getDefaultToolkit();
 			System.out.println(toolkit.getScreenSize().width+"x"+toolkit.getScreenSize().height);
-			myFrame.setSize(1900, 1080);
+			myFrame.setSize(1024, 600);
 			//myFrame.setJMenuBar(menuBar);
 			myFrame.addWindowListener(new WindowClose());
 			myFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

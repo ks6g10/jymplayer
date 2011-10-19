@@ -20,6 +20,6 @@ public class StatCol {
 	public static final String LD = "17";
 	static Color globalFade = Color.black;
 	public static String nItems;
-	public static final Dimension small = new Dimension(122, 122);
+	public static final Dimension small = new Dimension(122, 115);
 	public static final Dimension medium = new Dimension(338, 107);
 }

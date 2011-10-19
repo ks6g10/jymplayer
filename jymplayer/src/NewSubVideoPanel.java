@@ -20,13 +20,13 @@ public class NewSubVideoPanel extends GeneralVideoPanel {
 	public void init() throws MalformedURLException, IOException, ServiceException {
 		size =super.calcMaxThumbs();
 		subLayout = new FlowLayout();
-		this.setLayout(new FlowLayout(FlowLayout.RIGHT, size[1], size[2]));
+		this.setLayout(new FlowLayout(FlowLayout.LEADING, size[1], size[2]));
 		System.out.println("size"+size[0]);
 		//super.addPreThumbs(size[0]);
 		EmptyVideoSlot tmp = new EmptyVideoSlot(0);
 		EmptyVideoSlot tmp1 = new EmptyVideoSlot(1);
-		this.add(tmp);
-		this.add(tmp1);
+		//this.add(tmp);
+		//this.add(tmp1);
 		super.emptyVideos.add(tmp);
 		super.emptyVideos.add(tmp1);
 		latestSubVideosView(size[0], true);
