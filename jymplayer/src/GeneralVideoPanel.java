@@ -80,6 +80,7 @@ public abstract class GeneralVideoPanel extends JPanel {
 				this.validate();
 			thumbs.add(tmp);
 		}
+		System.out.println(thumbs.size());
 	}
 
 
@@ -96,15 +97,11 @@ public abstract class GeneralVideoPanel extends JPanel {
 	}
 
 	public void toggleShowAuthorVideos(String argAuthor) {
-		if(argAuthor == null) {
-			for(VideoThumb argThumb:thumbs) {
-				argThumb.toggleShowAuthorVideos(null);
-			}
-		} else {
 			for(VideoThumb argThumb:thumbs) {
 				argThumb.toggleShowAuthorVideos(argAuthor);
 			}
-		}
+			this.validate();
+			this.repaint();//increase performance with like 100%;
 	}
 
 
