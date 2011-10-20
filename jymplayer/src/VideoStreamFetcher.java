@@ -27,10 +27,6 @@ public class VideoStreamFetcher {
 	private HttpGet httpGet = null;
 	private HttpHost target = null;
 	private boolean hasRun = false;
-	public static final String FULLHD = "37";
-	public static final String HD = "22";
-	public static final String SD = "18";
-	public static final String LD = "17";
 
 
 	public void produceEntity(String argvideoUrl) throws IOException {
@@ -44,9 +40,7 @@ public class VideoStreamFetcher {
 		String[] tmp = argvideoUrl.split("/"); //split host = www.youtube.com with extension = /watch?v=GIBQpAsVoWo
 		httpGet = new HttpGet("/"+tmp[1]); // add / to replace splitter
 		target = new HttpHost(tmp[0],80,"http");
-
 		try {
-
 			response = httpClient.execute(target,httpGet,localContext);
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();

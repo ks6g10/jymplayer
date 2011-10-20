@@ -62,25 +62,25 @@ public class YouTube {
 			allURLMap.put(argVideoUrl, vSF.getURLMap());//puts urlmap inside allurlmap with video key 
 		//	vSF.getURLMap()
 		}
-		tmpURL = getVideoURL(VideoStreamFetcher.HD, allURLMap.get(argVideoUrl));
+		tmpURL = getVideoURL(StatCol.currentResolution, allURLMap.get(argVideoUrl));
 		System.out.println("test"+tmpURL);
 		mplayer.run(tmpURL);
 	}
 
 	public static String getVideoURL(String argResolution, HashMap<String, String> argMap) {
-		if(argResolution.equals(VideoStreamFetcher.FULLHD) ) {
-			if(argMap.containsKey(VideoStreamFetcher.FULLHD))
-				return argMap.get(VideoStreamFetcher.FULLHD);
+		if(argResolution.equals(StatCol.FULLHD) ) {
+			if(argMap.containsKey(StatCol.FULLHD))
+				return argMap.get(StatCol.FULLHD);
 		}
-		if(argResolution.equals(VideoStreamFetcher.FULLHD) || argResolution.equals(VideoStreamFetcher.HD))  { //if full hd is not avaliable
-			if(argMap.containsKey(VideoStreamFetcher.HD))
-				return argMap.get(VideoStreamFetcher.HD);
+		if(argResolution.equals(StatCol.FULLHD) || argResolution.equals(StatCol.HD))  { //if full hd is not avaliable
+			if(argMap.containsKey(StatCol.HD))
+				return argMap.get(StatCol.HD);
 		} 
 
-		if(argMap.containsKey(VideoStreamFetcher.SD))
-			return argMap.get(VideoStreamFetcher.SD);
-		if(argMap.containsKey(VideoStreamFetcher.LD))
-			return argMap.get(VideoStreamFetcher.LD);	
+		if(argMap.containsKey(StatCol.SD))
+			return argMap.get(StatCol.SD);
+		if(argMap.containsKey(StatCol.LD))
+			return argMap.get(StatCol.LD);	
 		return null;
 	}
 
@@ -137,6 +137,7 @@ public class YouTube {
 			//menuBar.add(tabbedPane);
 			menuBar.setBackground(Color.white);
 			menuBar.setVisible(true);
+			menuBar.add(new ResolutionButton());
 			//menuBar.setPreferredSize(new Dimension(1024, 20));
 			UpploaderView u = new UpploaderView();
 			tabbedPane.addTab("Channel", u);
@@ -148,7 +149,7 @@ public class YouTube {
 			Toolkit toolkit = Toolkit.getDefaultToolkit();
 			System.out.println(toolkit.getScreenSize().width+"x"+toolkit.getScreenSize().height);
 			myFrame.setSize(1024, 600);
-			//myFrame.setJMenuBar(menuBar);
+			myFrame.setJMenuBar(menuBar);
 			myFrame.addWindowListener(new WindowClose());
 			myFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			myFrame.setVisible(true);

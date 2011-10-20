@@ -18,6 +18,7 @@ public class StatCol {
 	public static final String HD = "22";
 	public static final String SD = "18";
 	public static final String LD = "17";
+	public static String currentResolution = FULLHD;
 	static Color globalFade = Color.black;
 	public static String nItems;
 	public static final Dimension small = new Dimension(122, 115);
