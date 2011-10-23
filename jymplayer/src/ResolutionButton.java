@@ -14,9 +14,7 @@ public class ResolutionButton extends JButton {
 	}
 	
 	public void toggleResolution() {
-		state++;
-		state = state%4;
-		switch (state) {
+		switch (state = ++state%3) {
 		case 0:
 			this.setText("1080P");
 			StatCol.currentResolution = StatCol.FULLHD;
@@ -25,15 +23,9 @@ public class ResolutionButton extends JButton {
 			this.setText("720P");
 			StatCol.currentResolution = StatCol.HD;
 			break;
-		case 2:
+		default:
 			this.setText("360P");
 			StatCol.currentResolution = StatCol.SD;
-			break;
-		case 3:
-			this.setText("240P");
-			StatCol.currentResolution = StatCol.LD;
-			break;
-		default:
 			break;
 		}
 	}

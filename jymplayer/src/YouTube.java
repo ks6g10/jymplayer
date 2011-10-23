@@ -36,16 +36,18 @@ import javax.swing.JTabbedPane;
 
 
 public class YouTube {
-	
-	static mPlayerWrapper mplayer = new mPlayerWrapper();
+
+	static mPlayerWrapper mplayer;// = new mPlayerWrapper();
 	static HashMap<String, HashMap<String, String>> allURLMap = new HashMap<String, HashMap<String,String>>();
 	static VideoStreamFetcher vSF = new VideoStreamFetcher();	
 	static boolean isSmall = true;
 	static int xspace = 5, yspace = 5;
 	static JFrame myFrame = new JFrame();
-	static JPanel myPanel = new JPanel();
 	static Component[] thumbs;
 	static NewSubVideoPanel newSubPanel;
+	static NewSubVideoPanel sub2;
+	static ArrayList<NewSubVideoPanel> newSubPanels = new ArrayList<NewSubVideoPanel>(5);
+	static DoublePanelStack newSubs;
 
 	public static void playVideo(String argVideoUrl) {
 		System.out.println(argVideoUrl);
@@ -60,7 +62,7 @@ public class YouTube {
 			}
 			vSF.generateStreamURL();
 			allURLMap.put(argVideoUrl, vSF.getURLMap());//puts urlmap inside allurlmap with video key 
-		//	vSF.getURLMap()
+			//	vSF.getURLMap()
 		}
 		tmpURL = getVideoURL(StatCol.currentResolution, allURLMap.get(argVideoUrl));
 		System.out.println("test"+tmpURL);
@@ -76,7 +78,6 @@ public class YouTube {
 			if(argMap.containsKey(StatCol.HD))
 				return argMap.get(StatCol.HD);
 		} 
-
 		if(argMap.containsKey(StatCol.SD))
 			return argMap.get(StatCol.SD);
 		if(argMap.containsKey(StatCol.LD))
@@ -95,41 +96,52 @@ public class YouTube {
 	}
 
 
-	public static void addVideoThumbsProg(List<VideoEntry> argEntries) {
-		VideoThumb tmp;
-		for(int i=0; i<argEntries.size(); i++) {
-			tmp = new VideoThumb(argEntries.get(i));
-			tmp.setVisible(false);
-			myPanel.add(tmp);
-			myPanel.validate();
-			tmp.setVisible(true);
-		}
-	}
 
 
-//	public static void favouriteVideosView(int argItems) throws IOException, ServiceException {
-//		nItems = Integer.toString(argItems);
-//		URL metafeedUrl = new URL(StatCol.BASEURL.concat(StatCol.username).concat(StatCol.FAVORITES).concat(StatCol.MAXRESULT).concat(nItems));
-//		System.out.println("Getting favorite video entries...\n");
-//		VideoFeed resultFeed = StatCol.myService.getFeed(metafeedUrl, VideoFeed.class);
-//		List<VideoEntry> entries = resultFeed.getEntries();
-//		for(VideoThumb thumb:getVideoThumbs(entries)) {
-//			myPanel.add(thumb);
-//		}
-//	}
+	//	public static void favouriteVideosView(int argItems) throws IOException, ServiceException {
+	//		nItems = Integer.toString(argItems);
+	//		URL metafeedUrl = new URL(StatCol.BASEURL.concat(StatCol.username).concat(StatCol.FAVORITES).concat(StatCol.MAXRESULT).concat(nItems));
+	//		System.out.println("Getting favorite video entries...\n");
+	//		VideoFeed resultFeed = StatCol.myService.getFeed(metafeedUrl, VideoFeed.class);
+	//		List<VideoEntry> entries = resultFeed.getEntries();
+	//		for(VideoThumb thumb:getVideoThumbs(entries)) {
+	//			myPanel.add(thumb);
+	//		}
+	//	}
 
 
 
 	public static void onExit() {
-		mplayer.onExit();
+		if(mplayer != null)
+			mplayer.onExit();	
 		myFrame.dispose();
 	}
+
+	public static void nextPanel() {
+		if(newSubs.hasNext()) {
+			myFrame.remove(newSubs.getCurrentPanel());
+			myFrame.add(newSubs.getNext());
+			newSubs.getCurrentPanel().setVisible(true);
+			myFrame.validate();
+			myFrame.repaint();
+		}
+	}
+	public static void prevPanel() {
+		if(newSubs.hasPrev()) {
+			myFrame.remove(newSubs.getCurrentPanel());
+			myFrame.add(newSubs.getPrev());
+			newSubs.getCurrentPanel().setVisible(true);
+			myFrame.validate();
+			myFrame.repaint();
+		}
+	}
+
 
 	public static void main(String[] args) {
 
 		try {
-			newSubPanel = new NewSubVideoPanel();
 			//myFrame.add(newSubPanel);
+
 			JTabbedPane tabbedPane = new JTabbedPane();
 			isSmall = true;
 			//tabbedPane.add(new JButton("asd"));
@@ -138,24 +150,42 @@ public class YouTube {
 			menuBar.setBackground(Color.white);
 			menuBar.setVisible(true);
 			menuBar.add(new ResolutionButton());
+			menuBar.add(new NextPanelbutton(false));
+			menuBar.add(new NextPanelbutton(true));
 			//menuBar.setPreferredSize(new Dimension(1024, 20));
 			UpploaderView u = new UpploaderView();
 			tabbedPane.addTab("Channel", u);
 			tabbedPane.addTab("Videos", newSubPanel);
+			//	menuBar.add(tabbedPane);
+			//tabbedPane.setTabComponentAt(0,menuBar);
+
 			//myFrame.add(u);
 			//myFrame.add(tabbedPane);
-			myFrame.add(newSubPanel);
 			//	myFrame.setLayout(new FlowLayout());
-			Toolkit toolkit = Toolkit.getDefaultToolkit();
-			System.out.println(toolkit.getScreenSize().width+"x"+toolkit.getScreenSize().height);
+			//Toolkit toolkit = Toolkit.getDefaultToolkit();
+			//System.out.println(toolkit.getScreenSize().width+"x"+toolkit.getScreenSize().height);
 			myFrame.setSize(1024, 600);
 			myFrame.setJMenuBar(menuBar);
 			myFrame.addWindowListener(new WindowClose());
 			myFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			myFrame.setVisible(true);
+			Dimension panelDim = myFrame.getRootPane().getSize();
+			//myFrame.add(newSubPanel);
+			for(int i =0; i < 3;i++) {
+				if(i == 0) {
+					newSubs = new DoublePanelStack(new NewSubVideoPanel(panelDim));
+					myFrame.add(newSubs.getCurrentPanel());
+					myFrame.validate();
+					myFrame.repaint();
+				}
+				if(StatCol.newsubsStartIndex < StatCol.MAXNEWSUBVIDEOS)
+					newSubs.add(new NewSubVideoPanel(panelDim));
+			}
 			//u.init();
-			newSubPanel.init();
-		
+			//sub2 = new NewSubVideoPanel(newSubPanel.init(),panelDim);
+			myFrame.validate();
+			//myFrame.pack();
+
 		}
 		catch(AuthenticationException e) {
 			e.printStackTrace();

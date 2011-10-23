@@ -23,4 +23,7 @@ public class StatCol {
 	public static String nItems;
 	public static final Dimension small = new Dimension(122, 115);
 	public static final Dimension medium = new Dimension(338, 107);
+	public static int panelsFinished = 0;
+	public static int newsubsStartIndex = 1;
+	public static final int MAXNEWSUBVIDEOS = 95;
 }

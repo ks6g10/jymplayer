@@ -1,4 +1,6 @@
+import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.util.ArrayList;
 import java.util.List;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -12,16 +14,14 @@ import com.google.gdata.util.ServiceException;
 public class NewSubVideoPanel extends GeneralVideoPanel {
 	private FlowLayout subLayout;
 	private int[] size;
-	public NewSubVideoPanel(){
-		super();
-		
+	public NewSubVideoPanel(Dimension argDimension){
+		super(argDimension);
 	}
 	
 	public void init() throws MalformedURLException, IOException, ServiceException {
 		size =super.calcMaxThumbs();
 		subLayout = new FlowLayout();
 		this.setLayout(new FlowLayout(FlowLayout.LEADING, size[1], size[2]));
-		System.out.println("size"+size[0]);
 		//super.addPreThumbs(size[0]);
 		EmptyVideoSlot tmp = new EmptyVideoSlot(0);
 		EmptyVideoSlot tmp1 = new EmptyVideoSlot(1);
@@ -31,29 +31,25 @@ public class NewSubVideoPanel extends GeneralVideoPanel {
 		super.emptyVideos.add(tmp1);
 		latestSubVideosView(size[0], true);
 		this.validate();
-		
+		StatCol.panelsFinished++;
+		StatCol.newsubsStartIndex += size[0];
 	}
 	
 	public void latestSubVideosView(int argItems, boolean isProgressive) throws MalformedURLException, IOException, ServiceException {
-		if(isProgressive) {
 			int nItems = argItems;
-			int firstIndex = 0;
+			List<VideoEntry> tmpVideoList = new ArrayList<VideoEntry>(nItems);
 			while(nItems>0) {
-				int tmpitems = nItems;
-				System.out.println("nitems= "+nItems+" startindex "+firstIndex);
 				if(nItems > 49) {
-					super.addVideoThumbsProg(super.getVideos(StatCol.NEWSUBSCIPTIONS,49,firstIndex));
+					//super.addVideoThumbsProg(super.getVideos(StatCol.NEWSUBSCIPTIONS,49,firstIndex));
+					tmpVideoList.addAll(super.getVideos(StatCol.NEWSUBSCIPTIONS,49,super.startIndex));
 					nItems -= 49;
-					firstIndex +=49 ;
+					super.startIndex +=49 ;
 				} else {
-					super.addVideoThumbsProg(super.getVideos(StatCol.NEWSUBSCIPTIONS,nItems,firstIndex));
+					tmpVideoList.addAll(super.getVideos(StatCol.NEWSUBSCIPTIONS,nItems,super.startIndex));
 					nItems = 0;
 				}		
 			}
-			//super.addVideoThumbsProg1(super.getVideos(StatCol.NEWSUBSCIPTIONS,argItems,0));
-		} else {
-			super.addVideoThumbs(super.getVideos(StatCol.NEWSUBSCIPTIONS,argItems,0));
-		}
+			super.addVideoThumbsProg(tmpVideoList);
 	}
 	
 
