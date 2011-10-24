@@ -48,6 +48,7 @@ public class YouTube {
 	static NewSubVideoPanel sub2;
 	static ArrayList<NewSubVideoPanel> newSubPanels = new ArrayList<NewSubVideoPanel>(5);
 	static DoublePanelStack newSubs;
+	static DoublePanelStack currentStack = newSubs;
 
 	public static void playVideo(String argVideoUrl) {
 		System.out.println(argVideoUrl);
@@ -118,19 +119,19 @@ public class YouTube {
 	}
 
 	public static void nextPanel() {
-		if(newSubs.hasNext()) {
-			myFrame.remove(newSubs.getCurrentPanel());
-			myFrame.add(newSubs.getNext());
-			newSubs.getCurrentPanel().setVisible(true);
+		if(currentStack.hasNext()) {
+			myFrame.remove(currentStack.getCurrentPanel());
+			myFrame.add(currentStack.getNext());
+			currentStack.getCurrentPanel().setVisible(true);
 			myFrame.validate();
 			myFrame.repaint();
 		}
 	}
 	public static void prevPanel() {
-		if(newSubs.hasPrev()) {
-			myFrame.remove(newSubs.getCurrentPanel());
-			myFrame.add(newSubs.getPrev());
-			newSubs.getCurrentPanel().setVisible(true);
+		if(currentStack.hasPrev()) {
+			myFrame.remove(currentStack.getCurrentPanel());
+			myFrame.add(currentStack.getPrev());
+			currentStack.getCurrentPanel().setVisible(true);
 			myFrame.validate();
 			myFrame.repaint();
 		}

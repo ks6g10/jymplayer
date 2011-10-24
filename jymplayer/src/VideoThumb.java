@@ -276,6 +276,10 @@ public class VideoThumb extends JPanel implements Comparable<VideoThumb> {
 	public GeneralVideoPanel getParentPanel() {
 		return (GeneralVideoPanel) this.getParent();
 	}
+	
+	public void displayAuthorVideos() {
+		System.out.println(author);
+	}
 }
 
 class clickHandler implements MouseListener {
@@ -300,7 +304,9 @@ class mouseOverAuthor implements MouseListener {
 		parentThumb = argParent;
 	}
 	@Override
-	public void mouseClicked(MouseEvent e) {e.consume();}
+	public void mouseClicked(MouseEvent e) {
+		parentThumb.displayAuthorVideos();
+		e.consume();}
 	@Override
 	public void mouseEntered(MouseEvent e) {
 		parentThumb.getParentPanel().toggleShowAuthorVideos((((JLabel) e.getSource()).getText()));
