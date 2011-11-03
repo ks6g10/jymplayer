@@ -18,7 +18,7 @@ public class mPlayerWrapper {
 	private static LineRedirecter outputStream;
 	private static final String linuxPath = "/usr/bin/mplayer";
 	private static final String winPath = "C:\\Program Files (x86)\\SMPlayer\\smplayer.exe";
-	private static final String mplayerArgs = " -slave -quiet -idle";
+	private static final String mplayerArgs = " -slave -quiet -idle -cache 8048 -cache-min 50";
 	private static String runtimeExec;// = winPath.concat(mplayerArgs);
 	
 	private static void initProcess() {
@@ -125,7 +125,7 @@ class LineRedirecter extends Thread {
             
             // read line by line
             while ( (line = reader.readLine()) != null) {
-          //  	System.out.println(line);
+            	System.out.println(line);
                 printStream.println(line);
             }
         } catch (IOException ioe) {

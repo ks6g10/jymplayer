@@ -37,7 +37,7 @@ import javax.swing.JTabbedPane;
 
 public class YouTube {
 
-	static mPlayerWrapper mplayer;// = new mPlayerWrapper();
+	static mPlayerWrapper mplayer = new mPlayerWrapper();
 	static HashMap<String, HashMap<String, String>> allURLMap = new HashMap<String, HashMap<String,String>>();
 	static VideoStreamFetcher vSF = new VideoStreamFetcher();	
 	static boolean isSmall = true;
